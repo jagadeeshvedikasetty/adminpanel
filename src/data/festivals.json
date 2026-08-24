@@ -1,0 +1,145 @@
+[
+  {
+    "id": "diwali",
+    "name": "Diwali (Deepavali)",
+    "description": "The Festival of Lights.",
+    "season": "October/November",
+    "isActive": false,
+    "themeColors": {
+      "primary": "#ff9800",
+      "secondary": "#f44336"
+    }
+  },
+  {
+    "id": "holi",
+    "name": "Holi",
+    "description": "The Festival of Colors.",
+    "season": "March",
+    "isActive": false,
+    "themeColors": {
+      "primary": "#e91e63",
+      "secondary": "#9c27b0"
+    }
+  },
+  {
+    "id": "dussehra",
+    "name": "Dussehra (Vijayadashami)",
+    "description": "Celebrates the victory of good over evil.",
+    "season": "September/October",
+    "isActive": false,
+    "themeColors": {
+      "primary": "#f44336",
+      "secondary": "#ffc107"
+    }
+  },
+  {
+    "id": "navratri",
+    "name": "Navratri / Durga Puja",
+    "description": "Nine nights dedicated to Goddess Durga.",
+    "season": "September/October",
+    "isActive": false,
+    "themeColors": {
+      "primary": "#d32f2f",
+      "secondary": "#ffeb3b"
+    }
+  },
+  {
+    "id": "makar-sankranti",
+    "name": "Makar Sankranti",
+    "description": "Harvest festival marking the transition of the sun into Capricorn.",
+    "season": "January",
+    "isActive": false,
+    "themeColors": {
+      "primary": "#ffeb3b",
+      "secondary": "#ff9800"
+    }
+  },
+  {
+    "id": "ganesh-chaturthi",
+    "name": "Ganesh Chaturthi",
+    "description": "Celebrating the birth of Lord Ganesha.",
+    "season": "August/September",
+    "isActive": false,
+    "themeColors": {
+      "primary": "#ff9800",
+      "secondary": "#4caf50"
+    }
+  },
+  {
+    "id": "krishna-janmashtami",
+    "name": "Krishna Janmashtami",
+    "description": "Celebrating the birth of Lord Krishna.",
+    "season": "August/September",
+    "isActive": false,
+    "themeColors": {
+      "primary": "#3f51b5",
+      "secondary": "#ffeb3b"
+    }
+  },
+  {
+    "id": "raksha-bandhan",
+    "name": "Raksha Bandhan (Rakhi)",
+    "description": "Celebrating the bond between brothers and sisters.",
+    "season": "August",
+    "isActive": false,
+    "themeColors": {
+      "primary": "#e91e63",
+      "secondary": "#00bcd4"
+    }
+  },
+  {
+    "id": "maha-shivaratri",
+    "name": "Maha Shivaratri",
+    "description": "The Great Night of Shiva.",
+    "season": "February/March",
+    "isActive": false,
+    "themeColors": {
+      "primary": "#212121",
+      "secondary": "#ff9800"
+    }
+  },
+  {
+    "id": "eid",
+    "name": "Eid al-Fitr & Eid al-Adha",
+    "description": "Major Islamic festivals.",
+    "season": "Varies",
+    "isActive": false,
+    "themeColors": {
+      "primary": "#4caf50",
+      "secondary": "#ffffff"
+    }
+  },
+  {
+    "id": "christmas",
+    "name": "Christmas",
+    "description": "Celebrated across the country.",
+    "season": "December 25th",
+    "isActive": false,
+    "themeColors": {
+      "primary": "#f44336",
+      "secondary": "#4caf50"
+    }
+  },
+  {
+    "id": "republic-day",
+    "name": "Republic Day",
+    "description": "National Holiday.",
+    "season": "January 26th",
+    "isActive": false,
+    "themeColors": {
+      "primary": "#ff9800",
+      "secondary": "#4caf50"
+    }
+  },
+  {
+    "id": "independence-day",
+    "name": "Independence Day",
+    "description": "National Holiday.",
+    "season": "August 15th",
+    "isActive": false,
+    "themeColors": {
+      "primary": "#ff9800",
+      "secondary": "#4caf50"
+    }
+  }
+]
