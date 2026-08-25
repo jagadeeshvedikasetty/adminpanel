@@ -1,10 +1,10 @@
 'use server'
 
-import { createClient } from '@/utils/supabase/server'
+import { createAdminClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 export async function getDecorations() {
-  const supabase = await createClient()
+  const supabase = await createAdminClient()
   const { data, error } = await supabase.from('floating_decorations').select('*')
   if (error) {
     console.error('Error fetching decorations:', error)
@@ -14,7 +14,7 @@ export async function getDecorations() {
 }
 
 export async function addDecoration(iconName: string) {
-  const supabase = await createClient()
+  const supabase = await createAdminClient()
   
   // Default to center of screen
   const newDeco = {
@@ -37,7 +37,7 @@ export async function addDecoration(iconName: string) {
 }
 
 export async function updateDecorationPosition(id: number, x_percent: number, y_percent: number) {
-  const supabase = await createClient()
+  const supabase = await createAdminClient()
   const { error } = await supabase
     .from('floating_decorations')
     .update({ x_percent, y_percent })
@@ -49,8 +49,21 @@ export async function updateDecorationPosition(id: number, x_percent: number, y_
   return { success: true }
 }
 
+export async function updateDecorationSize(id: number, size: number) {
+  const supabase = await createAdminClient()
+  const { error } = await supabase
+    .from('floating_decorations')
+    .update({ size })
+    .eq('id', id)
+
+  if (error) {
+    return { success: false, error: error.message }
+  }
+  return { success: true }
+}
+
 export async function deleteDecoration(id: number) {
-  const supabase = await createClient()
+  const supabase = await createAdminClient()
   const { error } = await supabase.from('floating_decorations').delete().eq('id', id)
   
   if (error) {
