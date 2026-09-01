@@ -1,145 +1,22 @@
 [
-  {
-    "id": "diwali",
-    "name": "Diwali (Deepavali)",
-    "description": "The Festival of Lights.",
-    "season": "October/November",
-    "isActive": false,
-    "themeColors": {
-      "primary": "#ff9800",
-      "secondary": "#f44336"
-    }
-  },
-  {
-    "id": "holi",
-    "name": "Holi",
-    "description": "The Festival of Colors.",
-    "season": "March",
-    "isActive": false,
-    "themeColors": {
-      "primary": "#e91e63",
-      "secondary": "#9c27b0"
-    }
-  },
-  {
-    "id": "dussehra",
-    "name": "Dussehra (Vijayadashami)",
-    "description": "Celebrates the victory of good over evil.",
-    "season": "September/October",
-    "isActive": false,
-    "themeColors": {
-      "primary": "#f44336",
-      "secondary": "#ffc107"
-    }
-  },
-  {
-    "id": "navratri",
-    "name": "Navratri / Durga Puja",
-    "description": "Nine nights dedicated to Goddess Durga.",
-    "season": "September/October",
-    "isActive": false,
-    "themeColors": {
-      "primary": "#d32f2f",
-      "secondary": "#ffeb3b"
-    }
-  },
-  {
-    "id": "makar-sankranti",
-    "name": "Makar Sankranti",
-    "description": "Harvest festival marking the transition of the sun into Capricorn.",
-    "season": "January",
-    "isActive": false,
-    "themeColors": {
-      "primary": "#ffeb3b",
-      "secondary": "#ff9800"
-    }
-  },
-  {
-    "id": "ganesh-chaturthi",
-    "name": "Ganesh Chaturthi",
-    "description": "Celebrating the birth of Lord Ganesha.",
-    "season": "August/September",
-    "isActive": false,
-    "themeColors": {
-      "primary": "#ff9800",
-      "secondary": "#4caf50"
-    }
-  },
-  {
-    "id": "krishna-janmashtami",
-    "name": "Krishna Janmashtami",
-    "description": "Celebrating the birth of Lord Krishna.",
-    "season": "August/September",
-    "isActive": false,
-    "themeColors": {
-      "primary": "#3f51b5",
-      "secondary": "#ffeb3b"
-    }
-  },
-  {
-    "id": "raksha-bandhan",
-    "name": "Raksha Bandhan (Rakhi)",
-    "description": "Celebrating the bond between brothers and sisters.",
-    "season": "August",
-    "isActive": false,
-    "themeColors": {
-      "primary": "#e91e63",
-      "secondary": "#00bcd4"
-    }
-  },
-  {
-    "id": "maha-shivaratri",
-    "name": "Maha Shivaratri",
-    "description": "The Great Night of Shiva.",
-    "season": "February/March",
-    "isActive": false,
-    "themeColors": {
-      "primary": "#212121",
-      "secondary": "#ff9800"
-    }
-  },
-  {
-    "id": "eid",
-    "name": "Eid al-Fitr & Eid al-Adha",
-    "description": "Major Islamic festivals.",
-    "season": "Varies",
-    "isActive": false,
-    "themeColors": {
-      "primary": "#4caf50",
-      "secondary": "#ffffff"
-    }
-  },
-  {
-    "id": "christmas",
-    "name": "Christmas",
-    "description": "Celebrated across the country.",
-    "season": "December 25th",
-    "isActive": false,
-    "themeColors": {
-      "primary": "#f44336",
-      "secondary": "#4caf50"
-    }
-  },
-  {
-    "id": "republic-day",
-    "name": "Republic Day",
-    "description": "National Holiday.",
-    "season": "January 26th",
-    "isActive": false,
-    "themeColors": {
-      "primary": "#ff9800",
-      "secondary": "#4caf50"
-    }
-  },
-  {
-    "id": "independence-day",
-    "name": "Independence Day",
-    "description": "National Holiday.",
-    "season": "August 15th",
-    "isActive": false,
-    "themeColors": {
-      "primary": "#ff9800",
-      "secondary": "#4caf50"
-    }
-  }
+  {"id":"diwali","name":"Diwali (Deepavali)","emoji":"🪔","description":"The Festival of Lights. Gold and warm amber tones to celebrate the victory of light over darkness.","season":"October / November","themeColors":{"primary":"#c8860a","secondary":"#8B1A1A"},"suggestedEffect":"sparkles"},
+  {"id":"holi","name":"Holi","emoji":"🎨","description":"The Festival of Colors. Vibrant pink and purple to capture the joyful spirit of gulal.","season":"March","themeColors":{"primary":"#e91e63","secondary":"#9c27b0"},"suggestedEffect":"confetti"},
+  {"id":"republic-day","name":"Republic Day","emoji":"🇮🇳","description":"National Holiday (Jan 26). Saffron and India Green inspired by the Tricolour.","season":"January 26th","themeColors":{"primary":"#FF9933","secondary":"#138808"},"suggestedEffect":"confetti"},
+  {"id":"independence-day","name":"Independence Day","emoji":"🏆","description":"National Holiday (Aug 15). Saffron and India Green inspired by the Tricolour.","season":"August 15th","themeColors":{"primary":"#FF9933","secondary":"#138808"},"suggestedEffect":"confetti"},
+  {"id":"makar-sankranti","name":"Makar Sankranti","emoji":"🪁","description":"Harvest festival of kites and sesame sweets. Sky blue meets golden yellow.","season":"January 14th","themeColors":{"primary":"#1565C0","secondary":"#F9A825"},"suggestedEffect":"kites"},
+  {"id":"navratri","name":"Navratri / Durga Puja","emoji":"🌸","description":"Nine nights of devotion to Goddess Durga. Crimson red and festive gold.","season":"September / October","themeColors":{"primary":"#C62828","secondary":"#F9A825"},"suggestedEffect":"sparkles"},
+  {"id":"dussehra","name":"Dussehra (Vijayadashami)","emoji":"🏹","description":"Victory of good over evil. Bold vermillion and bright gold.","season":"September / October","themeColors":{"primary":"#E53935","secondary":"#FFB300"},"suggestedEffect":null},
+  {"id":"ganesh-chaturthi","name":"Ganesh Chaturthi","emoji":"🐘","description":"Celebrating the birth of Lord Ganesha. Marigold orange meets leaf green.","season":"August / September","themeColors":{"primary":"#E65100","secondary":"#2E7D32"},"suggestedEffect":"sparkles"},
+  {"id":"krishna-janmashtami","name":"Krishna Janmashtami","emoji":"🦚","description":"Celebrating the birth of Lord Krishna. Royal blue and golden yellow.","season":"August / September","themeColors":{"primary":"#283593","secondary":"#F9A825"},"suggestedEffect":"sparkles"},
+  {"id":"raksha-bandhan","name":"Raksha Bandhan","emoji":"🎀","description":"The bond between brothers and sisters. Pink and teal for love and trust.","season":"August","themeColors":{"primary":"#AD1457","secondary":"#00838F"},"suggestedEffect":null},
+  {"id":"pongal","name":"Pongal / Lohri / Bihu","emoji":"🌾","description":"Harvest festivals from across India. Earthy turmeric yellow and green.","season":"January","themeColors":{"primary":"#F57F17","secondary":"#558B2F"},"suggestedEffect":null},
+  {"id":"onam","name":"Onam","emoji":"🌺","description":"The harvest festival of Kerala. Lush green and warm gold of the Pookalam.","season":"August / September","themeColors":{"primary":"#2E7D32","secondary":"#F9A825"},"suggestedEffect":"sparkles"},
+  {"id":"baisakhi","name":"Baisakhi / Vishu","emoji":"🎡","description":"Spring harvest festival. Bright saffron and deep green of the mustard fields.","season":"April 13th","themeColors":{"primary":"#E65100","secondary":"#1B5E20"},"suggestedEffect":"confetti"},
+  {"id":"eid","name":"Eid al-Fitr / Eid al-Adha","emoji":"🌙","description":"Major Islamic festivals of joy and gratitude. Emerald green and gleaming gold.","season":"Varies","themeColors":{"primary":"#2E7D32","secondary":"#F9A825"},"suggestedEffect":"sparkles"},
+  {"id":"christmas","name":"Christmas","emoji":"🎄","description":"Season of joy and giving. Classic festive red and crisp winter green.","season":"December 25th","themeColors":{"primary":"#B71C1C","secondary":"#2E7D32"},"suggestedEffect":"snow"},
+  {"id":"new-year","name":"New Year","emoji":"🎆","description":"Ring in the New Year! Elegant midnight black and sparkling gold.","season":"January 1st","themeColors":{"primary":"#212121","secondary":"#FFD700"},"suggestedEffect":"confetti"},
+  {"id":"maha-shivaratri","name":"Maha Shivaratri","emoji":"🔱","description":"The Great Night of Shiva. Deep midnight blue and sacred saffron.","season":"February / March","themeColors":{"primary":"#1A237E","secondary":"#FF6F00"},"suggestedEffect":null},
+  {"id":"ugadi","name":"Ugadi / Gudi Padwa","emoji":"🌿","description":"Telugu and Marathi New Year. Fresh spring green and bright turmeric.","season":"March / April","themeColors":{"primary":"#388E3C","secondary":"#FBC02D"},"suggestedEffect":"sparkles"},
+  {"id":"monsoon","name":"Monsoon Season","emoji":"🌧️","description":"The life-giving rains of India. Deep stormy slate and cool aqua.","season":"June - September","themeColors":{"primary":"#37474F","secondary":"#00796B"},"suggestedEffect":"rain"},
+  {"id":"winter","name":"Winter Season","emoji":"❄️","description":"Cold, cozy winter vibes. Icy navy and frosted silver.","season":"December - January","themeColors":{"primary":"#1A237E","secondary":"#90A4AE"},"suggestedEffect":"snow"}
 ]
