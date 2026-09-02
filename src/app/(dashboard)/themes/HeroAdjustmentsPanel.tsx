@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useTransition } from 'react'
 import { updateHeroAdjustments } from './actions'
 
 export default function HeroAdjustmentsPanel({ 
@@ -12,6 +12,7 @@ export default function HeroAdjustmentsPanel({
   activeTheme?: any,
   onChange?: (adjustments: any) => void
 }) {
+  const [isPending, startTransition] = useTransition()
   const [desktopHeight, setDesktopHeight] = useState(activeTheme?.hero_desktop_height ?? 100)
   const [mobileHeight, setMobileHeight] = useState(activeTheme?.hero_mobile_height ?? 60)
   const [desktopPosition, setDesktopPosition] = useState(activeTheme?.hero_desktop_position ?? 'center')
@@ -48,9 +49,11 @@ export default function HeroAdjustmentsPanel({
     <div className="w-[280px]">
 
 
-      <form action={async (fd) => {
-        await updateHeroAdjustments(fd);
-        onClose();
+      <form action={(fd) => {
+        startTransition(async () => {
+          await updateHeroAdjustments(fd);
+          onClose();
+        });
       }} className="space-y-4">
         {/* Desktop */}
         <div className="space-y-2">
@@ -110,8 +113,8 @@ export default function HeroAdjustmentsPanel({
           </div>
         </div>
 
-        <button type="submit" className="w-full mt-4 bg-orange-500 text-white text-xs py-2 rounded font-bold hover:bg-orange-600 transition-colors">
-          Save Adjustments
+        <button type="submit" disabled={isPending} className="w-full mt-4 bg-orange-500 text-white text-xs py-2 rounded font-bold hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+          {isPending ? 'Saving...' : 'Save Adjustments'}
         </button>
       </form>
     </div>
