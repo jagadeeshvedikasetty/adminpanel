@@ -2,7 +2,7 @@ import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import festivalsData from '@/data/festivals.json'
-import { getCustomEffects } from './(dashboard)/themes/actions'
+import { getCustomEffects } from './themes/actions'
 import SidebarNav from './SidebarNav'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {

@@ -227,7 +227,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [] 
                             </button>
                           </form>
                           {/* Delete Button */}
-                          <form action={deleteCustomEffect.bind(null, ce.id)} className="absolute -top-1 -right-1 hidden group-hover:block z-10">
+                          <form action={async () => { await deleteCustomEffect(ce.id) }} className="absolute -top-1 -right-1 hidden group-hover:block z-10">
                             <button type="submit" className="bg-red-600 text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center hover:bg-red-700 shadow-sm border border-red-800">
                               ✕
                             </button>
