@@ -13,5 +13,6 @@ export default async function ThemesPage() {
   ])
 
   const version = Date.now().toString()
-  return <ThemesPreviewClient initialDecorations={decorations} version={version} activeTheme={activeTheme} customEffects={customEffects} />
+  const clientUrl = process.env.NEXT_PUBLIC_CLIENT_URL || 'http://localhost:3000'
+  return <ThemesPreviewClient initialDecorations={decorations} version={version} activeTheme={activeTheme} customEffects={customEffects} clientUrl={clientUrl} />
 }

@@ -12,12 +12,14 @@ export default function ThemesPreviewClient({
   initialDecorations, 
   version = '1',
   activeTheme,
-  customEffects
+  customEffects,
+  clientUrl = 'http://localhost:3000'
 }: { 
   initialDecorations: any[], 
   version?: string,
   activeTheme?: any,
-  customEffects?: any[]
+  customEffects?: any[],
+  clientUrl?: string
 }) {
   const [decorations, setDecorations] = useState(initialDecorations)
   const [draggingId, setDraggingId] = useState<number | null>(null)
@@ -262,7 +264,7 @@ export default function ThemesPreviewClient({
         >
           <iframe
             ref={iframeRef}
-            src={`http://localhost:3000?studio=true&v=${version}`}
+            src={`${clientUrl}?studio=true&v=${version}`}
             className="absolute inset-0 w-full h-full border-none bg-white"
             title="Live Website Preview"
           />

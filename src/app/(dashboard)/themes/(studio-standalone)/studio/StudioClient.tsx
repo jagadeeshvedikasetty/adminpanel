@@ -9,7 +9,7 @@ import { ICONS } from '../../icons'
 
 
 
-export default function StudioClient({ initialDecorations, activeTheme, customEffects = [] }: { initialDecorations: any[], activeTheme?: any, customEffects?: any[] }) {
+export default function StudioClient({ initialDecorations, activeTheme, customEffects = [], clientUrl = 'http://localhost:3000' }: { initialDecorations: any[], activeTheme?: any, customEffects?: any[], clientUrl?: string }) {
   const [decorations, setDecorations] = useState(initialDecorations)
   const [showAdjustments, setShowAdjustments] = useState(false)
   const [draggingId, setDraggingId] = useState<number | null>(null)
@@ -215,7 +215,7 @@ export default function StudioClient({ initialDecorations, activeTheme, customEf
       >
         {/* Live Website Preview */}
         <iframe 
-          src="http://localhost:3001?studio=true" 
+          src={`${clientUrl}?studio=true`} 
           className="absolute inset-0 w-full h-full border-none"
           title="Client Website Preview"
         />
