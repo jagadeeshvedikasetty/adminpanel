@@ -122,6 +122,13 @@ export default function ThemesPreviewClient({
           }
         })
         setHasUnsaved(true)
+      } else if (e.data?.type === 'HERO_IMAGE_DRAGGED') {
+        const { isMobile, position } = e.data
+        // Dispatch event for HeroAdjustmentsPanel to pick up
+        window.dispatchEvent(new CustomEvent('HERO_POSITION_CHANGED', { 
+          detail: { isMobile, position } 
+        }))
+        setHasUnsaved(true)
       } else if (e.data?.type === 'REQUEST_STUDIO_SYNC') {
         if (iframeRef.current?.contentWindow) {
           iframeRef.current.contentWindow.postMessage({
@@ -349,6 +356,14 @@ export default function ThemesPreviewClient({
               <HeroAdjustmentsPanel 
                 activeTheme={activeTheme}
                 onClose={() => setOpenSection(null)} 
+                onChange={(adjustments) => {
+                  if (iframeRef.current?.contentWindow) {
+                    iframeRef.current.contentWindow.postMessage({
+                      type: 'STUDIO_HERO_ADJUSTMENTS',
+                      ...adjustments
+                    }, '*')
+                  }
+                }}
               />
             </div>
           </div>
