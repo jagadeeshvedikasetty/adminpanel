@@ -9,7 +9,7 @@ export default async function ThemesPage() {
   const [decorations, customEffects, { data: activeTheme }] = await Promise.all([
     getDecorations(),
     getCustomEffects(),
-    supabase.from('themes').select('*').eq('id', 'active_theme').single()
+    supabase.from('themes').select('*').eq('id', 'active_theme').maybeSingle()
   ])
 
   const version = Date.now().toString()
