@@ -370,3 +370,21 @@ export async function updateHeroTextCoordinates(xDesktop: number, yDesktop: numb
   if (error) throw new Error(error.message)
   revalidatePath('/themes', 'layout')
 }
+
+export async function updateHeroAdjustments(formData: FormData) {
+  const supabase = await createClient()
+  const { data: existing } = await supabase.from('themes').select('*').eq('id', 'active_theme').maybeSingle()
+
+  const { error } = await supabase.from('themes').upsert({
+    id: 'active_theme',
+    name: existing?.name || 'Custom Theme',
+    hero_desktop_height: Number(formData.get('heroDesktopHeight')) || 100,
+    hero_mobile_height: Number(formData.get('heroMobileHeight')) || 60,
+    hero_desktop_position: formData.get('heroDesktopPosition') || 'center',
+    hero_mobile_position: formData.get('heroMobilePosition') || 'center',
+    is_active: true
+  }, { onConflict: 'id' })
+
+  if (error) throw new Error(error.message)
+  revalidatePath('/themes', 'layout')
+}

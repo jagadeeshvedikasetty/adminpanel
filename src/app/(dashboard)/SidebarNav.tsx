@@ -67,13 +67,10 @@ export default function SidebarNav({ activeTheme, festivals }: { activeTheme: Th
   const [openSection, setOpenSection] = useState<string | null>(null)
   const [primaryColor, setPrimaryColor] = useState(activeTheme?.primary_color || '#FF9933')
   const [secondaryColor, setSecondaryColor] = useState(activeTheme?.secondary_color || '#138808')
-  const [desktopScale, setDesktopScale] = useState(activeTheme?.hero_text_scale_desktop || 1.0)
-  const [mobileScale, setMobileScale] = useState(activeTheme?.hero_text_scale_mobile || 1.0)
-  
-  const [showTextDesktop, setShowTextDesktop] = useState(activeTheme?.hero_text_show_desktop ?? true)
-  const [showTextMobile, setShowTextMobile] = useState(activeTheme?.hero_text_show_mobile ?? true)
-  const [showButtonDesktop, setShowButtonDesktop] = useState(activeTheme?.hero_button_show_desktop ?? true)
-  const [showButtonMobile, setShowButtonMobile] = useState(activeTheme?.hero_button_show_mobile ?? true)
+  const [heroDesktopHeight, setHeroDesktopHeight] = useState(activeTheme?.hero_desktop_height ?? 100)
+  const [heroMobileHeight, setHeroMobileHeight] = useState(activeTheme?.hero_mobile_height ?? 60)
+  const [heroDesktopPosition, setHeroDesktopPosition] = useState(activeTheme?.hero_desktop_position ?? 'center')
+  const [heroMobilePosition, setHeroMobilePosition] = useState(activeTheme?.hero_mobile_position ?? 'center')
 
   useEffect(() => {
     window.dispatchEvent(new CustomEvent('ADMIN_SECTION_CHANGED', { detail: openSection }))
@@ -83,12 +80,10 @@ export default function SidebarNav({ activeTheme, festivals }: { activeTheme: Th
     if (activeTheme) {
       setPrimaryColor(activeTheme.primary_color || '#FF9933')
       setSecondaryColor(activeTheme.secondary_color || '#138808')
-      setDesktopScale(activeTheme.hero_text_scale_desktop || 1.0)
-      setMobileScale(activeTheme.hero_text_scale_mobile || 1.0)
-      setShowTextDesktop(activeTheme.hero_text_show_desktop ?? true)
-      setShowTextMobile(activeTheme.hero_text_show_mobile ?? true)
-      setShowButtonDesktop(activeTheme.hero_button_show_desktop ?? true)
-      setShowButtonMobile(activeTheme.hero_button_show_mobile ?? true)
+      setHeroDesktopHeight(activeTheme.hero_desktop_height ?? 100)
+      setHeroMobileHeight(activeTheme.hero_mobile_height ?? 60)
+      setHeroDesktopPosition(activeTheme.hero_desktop_position ?? 'center')
+      setHeroMobilePosition(activeTheme.hero_mobile_position ?? 'center')
     }
   }, [activeTheme])
 
@@ -225,6 +220,57 @@ export default function SidebarNav({ activeTheme, festivals }: { activeTheme: Th
               <form action={uploadThemeBackground} className="flex gap-1 items-center">
                 <input type="file" name="file" accept="image/*" required className="flex-1 text-[9px] text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[9px] file:bg-orange-500 file:text-white cursor-pointer min-w-0" />
                 <button type="submit" className="text-[9px] bg-orange-500 text-white px-2 py-1 rounded hover:bg-orange-600 transition-colors shrink-0">Upload</button>
+              </form>
+            </div>
+          )}
+          {/* ── 📐 Hero Adjustments ── */}
+          <SectionHeader icon="📐" label="Hero Adjustments" open={openSection === 'hero-adjust'} onToggle={() => toggle('hero-adjust')} />
+          {openSection === 'hero-adjust' && (
+            <div className="mx-1 mb-1 bg-[#16162a] rounded border border-[#2d2d44] p-2 space-y-3">
+              <form action={updateHeroAdjustments} className="space-y-3">
+                {/* Desktop Adjustments */}
+                <div className="space-y-2">
+                  <span className="text-[10px] text-[#a0a0c0] font-semibold uppercase tracking-wider block">Desktop</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[9px] text-[#6c6c8a] w-12">Height</span>
+                    <input type="range" name="heroDesktopHeight" min="30" max="100" value={heroDesktopHeight} onChange={e => setHeroDesktopHeight(Number(e.target.value))} className="flex-1 accent-indigo-500" />
+                    <span className="text-[9px] text-white w-6 text-right">{heroDesktopHeight}%</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[9px] text-[#6c6c8a] w-12">Position</span>
+                    <select name="heroDesktopPosition" value={heroDesktopPosition} onChange={e => setHeroDesktopPosition(e.target.value)} className="flex-1 bg-[#0b0b14] border border-[#2d2d44] rounded px-2 py-1 text-[9px] text-white">
+                      <option value="center">Center</option>
+                      <option value="top">Top</option>
+                      <option value="bottom">Bottom</option>
+                      <option value="left">Left</option>
+                      <option value="right">Right</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Mobile Adjustments */}
+                <div className="space-y-2 pt-2 border-t border-[#2d2d44]">
+                  <span className="text-[10px] text-[#a0a0c0] font-semibold uppercase tracking-wider block">Mobile</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[9px] text-[#6c6c8a] w-12">Height</span>
+                    <input type="range" name="heroMobileHeight" min="30" max="100" value={heroMobileHeight} onChange={e => setHeroMobileHeight(Number(e.target.value))} className="flex-1 accent-indigo-500" />
+                    <span className="text-[9px] text-white w-6 text-right">{heroMobileHeight}%</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[9px] text-[#6c6c8a] w-12">Position</span>
+                    <select name="heroMobilePosition" value={heroMobilePosition} onChange={e => setHeroMobilePosition(e.target.value)} className="flex-1 bg-[#0b0b14] border border-[#2d2d44] rounded px-2 py-1 text-[9px] text-white">
+                      <option value="center">Center</option>
+                      <option value="top">Top</option>
+                      <option value="bottom">Bottom</option>
+                      <option value="left">Left</option>
+                      <option value="right">Right</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button type="submit" className="w-full bg-indigo-600 text-white text-[10px] py-1.5 rounded font-medium hover:bg-indigo-700 transition-colors">
+                  Save Adjustments
+                </button>
               </form>
             </div>
           )}
