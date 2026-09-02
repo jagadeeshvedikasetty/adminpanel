@@ -38,11 +38,11 @@ export default function HeroAdjustmentsPanel({
           <div className="flex items-center gap-3">
             <span className="text-[9px] w-12 text-[#a0a0c0]">Crop</span>
             <select name="heroDesktopPosition" value={desktopPosition} onChange={e => setDesktopPosition(e.target.value)} className="flex-1 bg-white/10 border-none rounded px-2 py-1 text-[10px] text-white">
-              <option value="center">Center</option>
-              <option value="top">Top</option>
-              <option value="bottom">Bottom</option>
-              <option value="left">Left</option>
-              <option value="right">Right</option>
+              <option className="bg-[#2d2d44] text-white" value="center">Center</option>
+              <option className="bg-[#2d2d44] text-white" value="top">Top</option>
+              <option className="bg-[#2d2d44] text-white" value="bottom">Bottom</option>
+              <option className="bg-[#2d2d44] text-white" value="left">Left</option>
+              <option className="bg-[#2d2d44] text-white" value="right">Right</option>
             </select>
           </div>
         </div>
@@ -65,11 +65,11 @@ export default function HeroAdjustmentsPanel({
           <div className="flex items-center gap-3">
             <span className="text-[9px] w-12 text-[#a0a0c0]">Crop</span>
             <select name="heroMobilePosition" value={mobilePosition} onChange={e => setMobilePosition(e.target.value)} className="flex-1 bg-white/10 border-none rounded px-2 py-1 text-[10px] text-white">
-              <option value="center">Center</option>
-              <option value="top">Top</option>
-              <option value="bottom">Bottom</option>
-              <option value="left">Left</option>
-              <option value="right">Right</option>
+              <option className="bg-[#2d2d44] text-white" value="center">Center</option>
+              <option className="bg-[#2d2d44] text-white" value="top">Top</option>
+              <option className="bg-[#2d2d44] text-white" value="bottom">Bottom</option>
+              <option className="bg-[#2d2d44] text-white" value="left">Left</option>
+              <option className="bg-[#2d2d44] text-white" value="right">Right</option>
             </select>
           </div>
         </div>
