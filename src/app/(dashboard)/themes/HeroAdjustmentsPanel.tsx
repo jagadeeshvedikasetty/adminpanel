@@ -55,8 +55,7 @@ export default function HeroAdjustmentsPanel({
   return (
     <div className="w-[280px]">
 
-
-      <form action={handleSubmit} className="space-y-4">
+      <form onSubmit={(e) => { e.preventDefault(); handleSubmit(new FormData(e.currentTarget)); }} className="space-y-4">
         {/* Desktop */}
         <div className="space-y-2">
           <h4 className="text-[10px] text-orange-400 font-semibold uppercase">Desktop</h4>

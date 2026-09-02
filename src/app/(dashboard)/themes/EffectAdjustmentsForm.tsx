@@ -80,7 +80,7 @@ export default function EffectAdjustmentsForm({ activeTheme, customEffects, onSa
   return (
     <div className="w-full">
       {/* Sliders */}
-      <form action={handleSubmit} className="space-y-4">
+      <form onSubmit={(e) => { e.preventDefault(); handleSubmit(new FormData(e.currentTarget)); }} className="space-y-4">
         <div>
           <label className="text-[10px] font-medium text-white/80 mb-1 flex justify-between items-center">
             <span>Opacity (Transparency)</span>

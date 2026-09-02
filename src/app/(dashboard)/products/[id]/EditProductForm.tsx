@@ -62,7 +62,7 @@ export default function EditProductForm({ product }: { product: any }) {
   }
 
   return (
-    <form action={handleSubmit} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+    <form onSubmit={(e) => { e.preventDefault(); handleSubmit(new FormData(e.currentTarget)); }} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
       {error && <div className="mb-4 text-red-600 bg-red-50 p-3 rounded">{error}</div>}
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
