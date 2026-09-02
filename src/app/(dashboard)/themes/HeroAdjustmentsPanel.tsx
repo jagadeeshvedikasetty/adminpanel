@@ -48,7 +48,10 @@ export default function HeroAdjustmentsPanel({
     <div className="w-[280px]">
 
 
-      <form action={updateHeroAdjustments} className="space-y-4">
+      <form action={async (fd) => {
+        await updateHeroAdjustments(fd);
+        onClose();
+      }} className="space-y-4">
         {/* Desktop */}
         <div className="space-y-2">
           <h4 className="text-[10px] text-orange-400 font-semibold uppercase">Desktop</h4>
@@ -107,7 +110,7 @@ export default function HeroAdjustmentsPanel({
           </div>
         </div>
 
-        <button type="submit" onClick={onClose} className="w-full mt-4 bg-orange-500 text-white text-xs py-2 rounded font-bold hover:bg-orange-600 transition-colors">
+        <button type="submit" className="w-full mt-4 bg-orange-500 text-white text-xs py-2 rounded font-bold hover:bg-orange-600 transition-colors">
           Save Adjustments
         </button>
       </form>
