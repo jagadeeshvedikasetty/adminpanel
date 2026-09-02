@@ -43,13 +43,7 @@ export default function ThemesPreviewClient({
   const [isDraggingPanel, setIsDraggingPanel] = useState(false)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
 
-  // Auto-open effect settings if an effect is active
-  useEffect(() => {
-    if (activeTheme?.active_effect && activeTheme.active_effect !== 'none') {
-      setOpenSection('effects')
-    }
-  }, [activeTheme?.active_effect])
-
+  // Removed auto-open effect
   const handlePanelPointerDown = (e: React.PointerEvent) => {
     e.preventDefault()
     setIsDraggingPanel(true)
