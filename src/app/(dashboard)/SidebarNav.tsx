@@ -12,8 +12,7 @@ import {
   removeHeroImage,
   updateThemeColors,
   uploadCustomEffect,
-  updateHeroText,
-  updateHeroTextScale
+  updateHeroText
 } from './themes/actions'
 
 type Theme = {
@@ -30,6 +29,10 @@ type Theme = {
   hero_button_link?: string
   hero_text_scale_desktop?: number
   hero_text_scale_mobile?: number
+  hero_text_show_desktop?: boolean
+  hero_text_show_mobile?: boolean
+  hero_button_show_desktop?: boolean
+  hero_button_show_mobile?: boolean
 }
 type Festival = {
   id: string; name: string; icon: string; description?: string
