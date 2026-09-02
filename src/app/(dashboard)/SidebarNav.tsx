@@ -153,7 +153,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [] 
                         </div>
                         <span className="text-[10px] text-[#c0c0d8] truncate">{f.name}</span>
                       </div>
-                      <form action={applyFestivalTheme.bind(null, f.name, f.themeColors.primary, f.themeColors.secondary, f.suggestedEffect || null)}>
+                      <form onSubmit={async (e) => { e.preventDefault(); await applyFestivalTheme(f.name, f.themeColors.primary, f.themeColors.secondary, f.suggestedEffect || null); }}>
                         <button type="submit" disabled={isActive} className={`text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0 transition-colors ${isActive ? 'bg-orange-500/20 text-orange-400 cursor-default' : 'bg-[#2d2d44] text-[#a0a0c0] hover:bg-orange-500 hover:text-white'}`}>
                           {isActive ? '✓' : 'Apply'}
                         </button>
@@ -175,7 +175,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [] 
                     <span className="text-[9px] text-[#6c6c8a]">Secondary</span>
                   </label>
                 </div>
-                <form action={updateThemeColors.bind(null, activeTheme?.name || 'Custom', primaryColor, secondaryColor)}>
+                <form onSubmit={async (e) => { e.preventDefault(); await updateThemeColors(activeTheme?.name || 'Custom', primaryColor, secondaryColor); }}>
                   <button type="submit" className="w-full text-[9px] font-bold bg-orange-500 hover:bg-orange-600 text-white rounded py-1 transition-colors">
                     Apply Colors
                   </button>
@@ -192,7 +192,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [] 
                 {EFFECTS.map(e => {
                   const isActive = (activeTheme?.active_effect === e.id) || (e.id === 'none' && !activeTheme?.active_effect)
                   return (
-                    <form key={e.id} action={updateThemeEffect.bind(null, e.id === 'none' ? null : e.id)}>
+                    <form key={e.id} onSubmit={async (evt) => { evt.preventDefault(); await updateThemeEffect(e.id === 'none' ? null : e.id); }}>
                       <button type="submit" title={e.label} className={`w-full flex flex-col items-center gap-0.5 py-1.5 rounded text-[9px] transition-colors ${isActive ? 'bg-orange-500/20 text-orange-400 ring-1 ring-orange-500/40' : 'bg-[#2d2d44] text-[#a0a0c0] hover:bg-[#3d3d5c]'}`}>
                         <span className="text-sm leading-none">{e.icon}</span>
                         <span>{e.label}</span>
@@ -201,7 +201,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [] 
                   )
                 })}
               </div>
-              <form action={uploadCustomEffect} className="flex gap-1 items-center">
+              <form onSubmit={async (e) => { e.preventDefault(); await uploadCustomEffect(new FormData(e.currentTarget)); }} className="flex gap-1 items-center">
                 <input type="file" name="file" accept=".json,.svg" className="flex-1 text-[9px] text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[9px] file:bg-indigo-600 file:text-white cursor-pointer min-w-0" />
                 <button type="submit" className="text-[9px] bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700 transition-colors shrink-0">Upload</button>
               </form>
@@ -215,7 +215,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [] 
                       const isActive = activeTheme?.custom_effect_url === ce.icon_url
                       return (
                         <div key={ce.id} className="relative group">
-                          <form action={applyCustomEffect.bind(null, ce.icon_url)}>
+                          <form onSubmit={async (e) => { e.preventDefault(); await applyCustomEffect(ce.icon_url); }}>
                             <button type="submit" title={ce.name || 'Custom Effect'} className={`w-full flex flex-col items-center gap-0.5 py-1.5 rounded text-[9px] transition-colors ${isActive ? 'bg-indigo-500/20 text-indigo-400 ring-1 ring-indigo-500/40' : 'bg-[#2d2d44] text-[#a0a0c0] hover:bg-[#3d3d5c]'}`}>
                               {ce.icon_url?.endsWith('.svg') ? (
                                 /* eslint-disable-next-line @next/next/no-img-element */
@@ -262,7 +262,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [] 
                 <div className="relative rounded overflow-hidden">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={activeTheme.background_image_url} alt="bg" className="w-full h-14 object-cover opacity-70" />
-                  <form action={removeThemeBackground} className="absolute top-1 right-1">
+                  <form onSubmit={async (e) => { e.preventDefault(); await removeThemeBackground(); }} className="absolute top-1 right-1">
                     <button type="submit" className="bg-red-600/80 text-white text-[9px] px-1.5 py-0.5 rounded hover:bg-red-600">✕</button>
                   </form>
                 </div>
@@ -271,7 +271,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [] 
                   <span className="text-[9px] text-[#6c6c8a]">No background set</span>
                 </div>
               )}
-              <form action={uploadThemeBackground} className="flex gap-1 items-center">
+              <form onSubmit={async (e) => { e.preventDefault(); await uploadThemeBackground(new FormData(e.currentTarget)); }} className="flex gap-1 items-center">
                 <input type="file" name="file" accept="image/*" required className="flex-1 text-[9px] text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[9px] file:bg-orange-500 file:text-white cursor-pointer min-w-0" />
                 <button type="submit" className="text-[9px] bg-orange-500 text-white px-2 py-1 rounded hover:bg-orange-600 transition-colors shrink-0">Upload</button>
               </form>
@@ -299,7 +299,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [] 
                   <div className="relative rounded overflow-hidden">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={activeTheme.hero_image_url} alt="hero" className="w-full h-14 object-cover opacity-70" />
-                    <form action={removeHeroImage.bind(null, false)} className="absolute top-1 right-1">
+                    <form onSubmit={async (e) => { e.preventDefault(); await removeHeroImage(false); }} className="absolute top-1 right-1">
                       <button type="submit" className="bg-red-600/80 text-white text-[9px] px-1.5 py-0.5 rounded hover:bg-red-600">✕</button>
                     </form>
                   </div>
@@ -308,7 +308,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [] 
                     <span className="text-[9px] text-[#6c6c8a]">Using default desktop hero</span>
                   </div>
                 )}
-                <form action={uploadHeroImage} className="flex gap-1 items-center">
+                <form onSubmit={async (e) => { e.preventDefault(); await uploadHeroImage(new FormData(e.currentTarget)); }} className="flex gap-1 items-center">
                   <input type="file" name="file" accept="image/*" required className="flex-1 text-[9px] text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[9px] file:bg-indigo-600 file:text-white cursor-pointer min-w-0" />
                   <input type="hidden" name="isMobile" value="false" />
                   <button type="submit" className="text-[9px] bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700 transition-colors shrink-0">Upload</button>
@@ -322,7 +322,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [] 
                   <div className="relative rounded overflow-hidden">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={activeTheme.mobile_hero_image_url} alt="mobile hero" className="w-full h-20 object-cover opacity-70" />
-                    <form action={removeHeroImage.bind(null, true)} className="absolute top-1 right-1">
+                    <form onSubmit={async (e) => { e.preventDefault(); await removeHeroImage(true); }} className="absolute top-1 right-1">
                       <button type="submit" className="bg-red-600/80 text-white text-[9px] px-1.5 py-0.5 rounded hover:bg-red-600">✕</button>
                     </form>
                   </div>
@@ -331,7 +331,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [] 
                     <span className="text-[9px] text-[#6c6c8a]">Falls back to desktop</span>
                   </div>
                 )}
-                <form action={uploadHeroImage} className="flex gap-1 items-center">
+                <form onSubmit={async (e) => { e.preventDefault(); await uploadHeroImage(new FormData(e.currentTarget)); }} className="flex gap-1 items-center">
                   <input type="file" name="file" accept="image/*" required className="flex-1 text-[9px] text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[9px] file:bg-indigo-600 file:text-white cursor-pointer min-w-0" />
                   <input type="hidden" name="isMobile" value="true" />
                   <button type="submit" className="text-[9px] bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700 transition-colors shrink-0">Upload</button>
