@@ -64,7 +64,7 @@ export default function SidebarNav({ activeTheme, festivals }: { activeTheme: Th
   const router = useRouter()
   const isTheme = pathname.startsWith('/themes')
   const [themeOpen, setThemeOpen] = useState(isTheme)
-  const [openSection, setOpenSection] = useState<string | null>(isTheme ? 'colors' : null)
+  const [openSection, setOpenSection] = useState<string | null>(null)
   const [primaryColor, setPrimaryColor] = useState(activeTheme?.primary_color || '#FF9933')
   const [secondaryColor, setSecondaryColor] = useState(activeTheme?.secondary_color || '#138808')
   const [desktopScale, setDesktopScale] = useState(activeTheme?.hero_text_scale_desktop || 1.0)
