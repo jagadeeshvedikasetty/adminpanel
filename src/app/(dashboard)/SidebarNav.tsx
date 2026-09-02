@@ -267,52 +267,10 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [] 
           {/* ── 📐 Hero Adjustments ── */}
           <SectionHeader icon="📐" label="Hero Adjustments" open={openSection === 'hero-adjust'} onToggle={() => toggle('hero-adjust')} />
           {openSection === 'hero-adjust' && (
-            <div className="mx-1 mb-1 bg-[#16162a] rounded border border-[#2d2d44] p-2 space-y-3">
-              <form action={updateHeroAdjustments} className="space-y-3">
-                {/* Desktop Adjustments */}
-                <div className="space-y-2">
-                  <span className="text-[10px] text-[#a0a0c0] font-semibold uppercase tracking-wider block">Desktop</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[9px] text-[#6c6c8a] w-12">Height</span>
-                    <input type="range" name="heroDesktopHeight" min="30" max="100" value={heroDesktopHeight} onChange={e => setHeroDesktopHeight(Number(e.target.value))} className="flex-1 accent-indigo-500" />
-                    <span className="text-[9px] text-white w-6 text-right">{heroDesktopHeight}%</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[9px] text-[#6c6c8a] w-12">Position</span>
-                    <select name="heroDesktopPosition" value={heroDesktopPosition} onChange={e => setHeroDesktopPosition(e.target.value)} className="flex-1 bg-[#0b0b14] border border-[#2d2d44] rounded px-2 py-1 text-[9px] text-white">
-                      <option value="center">Center</option>
-                      <option value="top">Top</option>
-                      <option value="bottom">Bottom</option>
-                      <option value="left">Left</option>
-                      <option value="right">Right</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* Mobile Adjustments */}
-                <div className="space-y-2 pt-2 border-t border-[#2d2d44]">
-                  <span className="text-[10px] text-[#a0a0c0] font-semibold uppercase tracking-wider block">Mobile</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[9px] text-[#6c6c8a] w-12">Height</span>
-                    <input type="range" name="heroMobileHeight" min="30" max="100" value={heroMobileHeight} onChange={e => setHeroMobileHeight(Number(e.target.value))} className="flex-1 accent-indigo-500" />
-                    <span className="text-[9px] text-white w-6 text-right">{heroMobileHeight}%</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[9px] text-[#6c6c8a] w-12">Position</span>
-                    <select name="heroMobilePosition" value={heroMobilePosition} onChange={e => setHeroMobilePosition(e.target.value)} className="flex-1 bg-[#0b0b14] border border-[#2d2d44] rounded px-2 py-1 text-[9px] text-white">
-                      <option value="center">Center</option>
-                      <option value="top">Top</option>
-                      <option value="bottom">Bottom</option>
-                      <option value="left">Left</option>
-                      <option value="right">Right</option>
-                    </select>
-                  </div>
-                </div>
-
-                <button type="submit" className="w-full bg-indigo-600 text-white text-[10px] py-1.5 rounded font-medium hover:bg-indigo-700 transition-colors">
-                  Save Adjustments
-                </button>
-              </form>
+            <div className="mx-1 mb-1 bg-[#16162a] rounded border border-[#2d2d44] p-2">
+              <p className="text-[10px] text-[#a0a0c0] text-center leading-relaxed">
+                Controls are now in the floating panel inside the live preview.
+              </p>
             </div>
           )}
 

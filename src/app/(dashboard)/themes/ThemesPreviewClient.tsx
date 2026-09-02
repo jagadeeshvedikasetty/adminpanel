@@ -5,6 +5,7 @@ import { saveAllDecorations } from './(studio-standalone)/studio/actions'
 import { updateHeroTextCoordinates } from './actions'
 import { ICONS } from './icons'
 import EffectAdjustmentsForm from './EffectAdjustmentsForm'
+import HeroAdjustmentsPanel from './HeroAdjustmentsPanel'
 
 const DECORATION_ICONS = ['kite', 'diya', 'mango', 'flower', 'sparkle']
 
@@ -307,6 +308,47 @@ export default function ThemesPreviewClient({
                 activeTheme={activeTheme} 
                 customEffects={customEffects || []} 
                 onSaveCallback={() => setShowEffectSettings(false)} 
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Draggable Hero Adjustments Panel */}
+        {openSection === 'hero-adjust' && (
+          <div
+            className="draggable-panel absolute z-[99999] backdrop-blur-md bg-black/60 border border-white/20 shadow-2xl rounded-xl flex flex-col overflow-hidden"
+            style={panelPos ? {
+              left: `${panelPos.x}px`,
+              top: `${panelPos.y}px`,
+            } : {
+              right: '20px',
+              top: '20px',
+            }}
+          >
+            {/* Draggable Header */}
+            <div 
+              className="flex items-center justify-between px-3 py-2 border-b border-white/10 bg-white/5 cursor-grab active:cursor-grabbing"
+              onPointerDown={handlePanelPointerDown}
+              onPointerMove={handlePanelPointerMove}
+              onPointerUp={handlePanelPointerUp}
+            >
+              <span className="text-white text-xs font-bold uppercase tracking-wider select-none">
+                Hero Adjustments
+              </span>
+              <button 
+                onClick={() => setOpenSection(null)} 
+                className="text-white/60 hover:text-white text-xs transition-colors p-1"
+                onPointerDown={(e) => e.stopPropagation()}
+              >
+                ✕
+              </button>
+            </div>
+            
+            {/* Body */}
+            <div className="p-4 bg-[#16162a]">
+              <HeroAdjustmentsPanel 
+                activeTheme={activeTheme}
+                onClose={() => setOpenSection(null)} 
               />
             </div>
           </div>

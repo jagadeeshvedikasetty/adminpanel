@@ -1,0 +1,83 @@
+'use client'
+
+import { useState } from 'react'
+import { updateHeroAdjustments } from './actions'
+
+export default function HeroAdjustmentsPanel({ 
+  onClose,
+  activeTheme
+}: { 
+  onClose: () => void,
+  activeTheme?: any
+}) {
+  const [desktopHeight, setDesktopHeight] = useState(activeTheme?.hero_desktop_height ?? 100)
+  const [mobileHeight, setMobileHeight] = useState(activeTheme?.hero_mobile_height ?? 60)
+  const [desktopPosition, setDesktopPosition] = useState(activeTheme?.hero_desktop_position ?? 'center')
+  const [mobilePosition, setMobilePosition] = useState(activeTheme?.hero_mobile_position ?? 'center')
+  const [desktopZoom, setDesktopZoom] = useState(activeTheme?.hero_desktop_zoom ?? 1.0)
+  const [mobileZoom, setMobileZoom] = useState(activeTheme?.hero_mobile_zoom ?? 1.0)
+
+  return (
+    <div className="w-[280px]">
+
+
+      <form action={updateHeroAdjustments} className="space-y-4">
+        {/* Desktop */}
+        <div className="space-y-2">
+          <h4 className="text-[10px] text-orange-400 font-semibold uppercase">Desktop</h4>
+          <div className="flex items-center gap-3">
+            <span className="text-[9px] w-12 text-[#a0a0c0]">Height</span>
+            <input type="range" name="heroDesktopHeight" min="30" max="100" value={desktopHeight} onChange={e => setDesktopHeight(Number(e.target.value))} className="flex-1 accent-orange-500 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer" />
+            <span className="text-[9px] w-8 text-right">{desktopHeight}%</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-[9px] w-12 text-[#a0a0c0]">Zoom</span>
+            <input type="range" name="heroDesktopZoom" min="1" max="2" step="0.05" value={desktopZoom} onChange={e => setDesktopZoom(Number(e.target.value))} className="flex-1 accent-orange-500 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer" />
+            <span className="text-[9px] w-8 text-right">{desktopZoom.toFixed(2)}x</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-[9px] w-12 text-[#a0a0c0]">Crop</span>
+            <select name="heroDesktopPosition" value={desktopPosition} onChange={e => setDesktopPosition(e.target.value)} className="flex-1 bg-white/10 border-none rounded px-2 py-1 text-[10px] text-white">
+              <option value="center">Center</option>
+              <option value="top">Top</option>
+              <option value="bottom">Bottom</option>
+              <option value="left">Left</option>
+              <option value="right">Right</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="border-t border-white/10 my-2"></div>
+
+        {/* Mobile */}
+        <div className="space-y-2">
+          <h4 className="text-[10px] text-orange-400 font-semibold uppercase">Mobile</h4>
+          <div className="flex items-center gap-3">
+            <span className="text-[9px] w-12 text-[#a0a0c0]">Height</span>
+            <input type="range" name="heroMobileHeight" min="30" max="100" value={mobileHeight} onChange={e => setMobileHeight(Number(e.target.value))} className="flex-1 accent-orange-500 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer" />
+            <span className="text-[9px] w-8 text-right">{mobileHeight}%</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-[9px] w-12 text-[#a0a0c0]">Zoom</span>
+            <input type="range" name="heroMobileZoom" min="1" max="2" step="0.05" value={mobileZoom} onChange={e => setMobileZoom(Number(e.target.value))} className="flex-1 accent-orange-500 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer" />
+            <span className="text-[9px] w-8 text-right">{mobileZoom.toFixed(2)}x</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-[9px] w-12 text-[#a0a0c0]">Crop</span>
+            <select name="heroMobilePosition" value={mobilePosition} onChange={e => setMobilePosition(e.target.value)} className="flex-1 bg-white/10 border-none rounded px-2 py-1 text-[10px] text-white">
+              <option value="center">Center</option>
+              <option value="top">Top</option>
+              <option value="bottom">Bottom</option>
+              <option value="left">Left</option>
+              <option value="right">Right</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" onClick={onClose} className="w-full mt-4 bg-orange-500 text-white text-xs py-2 rounded font-bold hover:bg-orange-600 transition-colors">
+          Save Adjustments
+        </button>
+      </form>
+    </div>
+  )
+}

@@ -399,6 +399,8 @@ export async function updateHeroAdjustments(formData: FormData) {
     hero_mobile_height: Number(formData.get('heroMobileHeight')) || 60,
     hero_desktop_position: formData.get('heroDesktopPosition') || 'center',
     hero_mobile_position: formData.get('heroMobilePosition') || 'center',
+    hero_desktop_zoom: Number(formData.get('heroDesktopZoom')) || 1.0,
+    hero_mobile_zoom: Number(formData.get('heroMobileZoom')) || 1.0,
     is_active: true
   }, { onConflict: 'id' })
 
