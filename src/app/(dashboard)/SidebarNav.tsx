@@ -238,6 +238,19 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [] 
                   </div>
                 </div>
               )}
+              {activeTheme?.active_effect && activeTheme.active_effect !== 'none' && (
+                <div className="pt-1 border-t border-[#2d2d44]">
+                  <button 
+                    onClick={() => {
+                      window.dispatchEvent(new CustomEvent('ADMIN_SECTION_CHANGED', { detail: 'effects' }))
+                    }} 
+                    className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded text-[10px] bg-[#2d2d44] text-orange-400 hover:bg-[#3d3d5c] transition-colors border border-orange-500/20 hover:border-orange-500/40"
+                  >
+                    <span className="text-sm leading-none">⚙️</span>
+                    <span className="font-semibold">{activeTheme.active_effect} Settings</span>
+                  </button>
+                </div>
+              )}
             </div>
           )}
 

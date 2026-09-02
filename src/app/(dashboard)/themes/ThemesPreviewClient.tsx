@@ -26,6 +26,7 @@ export default function ThemesPreviewClient({
   const [draggingId, setDraggingId] = useState<number | null>(null)
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [openSection, setOpenSection] = useState<string | null>(null)
+  const [isMinimized, setIsMinimized] = useState(false)
   const [hasUnsaved, setHasUnsaved] = useState(false)
   const [isSaving, startTransition] = useTransition()
   const iframeRef = useRef<HTMLIFrameElement>(null)
@@ -38,7 +39,6 @@ export default function ThemesPreviewClient({
   })
 
   // Draggable Effect Settings Panel State
-  const [showEffectSettings, setShowEffectSettings] = useState(false)
   const [panelPos, setPanelPos] = useState<{ x: number, y: number } | null>(null)
   const [isDraggingPanel, setIsDraggingPanel] = useState(false)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
@@ -46,9 +46,7 @@ export default function ThemesPreviewClient({
   // Auto-open effect settings if an effect is active
   useEffect(() => {
     if (activeTheme?.active_effect && activeTheme.active_effect !== 'none') {
-      setShowEffectSettings(true)
-    } else {
-      setShowEffectSettings(false)
+      setOpenSection('effects')
     }
   }, [activeTheme?.active_effect])
 
@@ -142,7 +140,10 @@ export default function ThemesPreviewClient({
     }
     window.addEventListener('message', handleMessage)
     
-    const handleSectionChange = (e: any) => setOpenSection(e.detail)
+    const handleSectionChange = (e: any) => {
+      setOpenSection(e.detail)
+      setIsMinimized(false)
+    }
     window.addEventListener('ADMIN_SECTION_CHANGED', handleSectionChange)
     
     return () => {
@@ -278,52 +279,10 @@ export default function ThemesPreviewClient({
           />
         </div>
 
-        {/* Draggable Global Effect Settings Panel */}
-        {showEffectSettings && activeTheme && (
+        {/* Floating Panels */}
+        {openSection && (
           <div
-            className="draggable-panel absolute z-[99999] backdrop-blur-md bg-black/60 border border-white/20 shadow-2xl rounded-xl flex flex-col min-w-[280px] overflow-hidden"
-            style={panelPos ? {
-              left: `${panelPos.x}px`,
-              top: `${panelPos.y}px`,
-            } : {
-              right: '20px',
-              bottom: '20px',
-            }}
-          >
-            {/* Draggable Header */}
-            <div 
-              className="flex items-center justify-between px-3 py-2 border-b border-white/10 bg-white/5 cursor-grab active:cursor-grabbing"
-              onPointerDown={handlePanelPointerDown}
-              onPointerMove={handlePanelPointerMove}
-              onPointerUp={handlePanelPointerUp}
-            >
-              <span className="text-white text-xs font-bold uppercase tracking-wider select-none">
-                {activeTheme.active_effect} Settings
-              </span>
-              <button 
-                onClick={() => setShowEffectSettings(false)} 
-                className="text-white/60 hover:text-white text-xs transition-colors p-1"
-                onPointerDown={(e) => e.stopPropagation()}
-              >
-                ✕
-              </button>
-            </div>
-            
-            {/* Body */}
-            <div className="p-4">
-              <EffectAdjustmentsForm 
-                activeTheme={activeTheme} 
-                customEffects={customEffects || []} 
-                onSaveCallback={() => setShowEffectSettings(false)} 
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Draggable Hero Adjustments Panel */}
-        {openSection === 'hero-adjust' && (
-          <div
-            className="draggable-panel absolute z-[99999] backdrop-blur-md bg-black/60 border border-white/20 shadow-2xl rounded-xl flex flex-col overflow-hidden"
+            className={`draggable-panel absolute z-[99999] ${isMinimized ? 'w-10 h-10 rounded-full' : 'rounded-xl'} flex flex-col overflow-hidden backdrop-blur-md bg-black/60 border border-white/20 shadow-2xl transition-all`}
             style={panelPos ? {
               left: `${panelPos.x}px`,
               top: `${panelPos.y}px`,
@@ -332,40 +291,72 @@ export default function ThemesPreviewClient({
               top: '20px',
             }}
           >
-            {/* Draggable Header */}
-            <div 
-              className="flex items-center justify-between px-3 py-2 border-b border-white/10 bg-white/5 cursor-grab active:cursor-grabbing"
-              onPointerDown={handlePanelPointerDown}
-              onPointerMove={handlePanelPointerMove}
-              onPointerUp={handlePanelPointerUp}
-            >
-              <span className="text-white text-xs font-bold uppercase tracking-wider select-none">
-                Hero Adjustments
-              </span>
+            {isMinimized ? (
               <button 
-                onClick={() => setOpenSection(null)} 
-                className="text-white/60 hover:text-white text-xs transition-colors p-1"
-                onPointerDown={(e) => e.stopPropagation()}
+                className="w-full h-full flex items-center justify-center text-white cursor-grab active:cursor-grabbing bg-white/10 hover:bg-white/20 transition-colors"
+                onPointerDown={handlePanelPointerDown}
+                onPointerMove={handlePanelPointerMove}
+                onPointerUp={handlePanelPointerUp}
+                onClick={() => setIsMinimized(false)}
+                title="Restore Panel"
               >
-                ✕
+                ⚙️
               </button>
-            </div>
-            
-            {/* Body */}
-            <div className="p-4 bg-[#16162a]">
-              <HeroAdjustmentsPanel 
-                activeTheme={activeTheme}
-                onClose={() => setOpenSection(null)} 
-                onChange={(adjustments) => {
-                  if (iframeRef.current?.contentWindow) {
-                    iframeRef.current.contentWindow.postMessage({
-                      type: 'STUDIO_HERO_ADJUSTMENTS',
-                      ...adjustments
-                    }, '*')
-                  }
-                }}
-              />
-            </div>
+            ) : (
+              <>
+                {/* Draggable Header */}
+                <div 
+                  className="flex items-center justify-between px-3 py-2 border-b border-white/10 bg-white/5 cursor-grab active:cursor-grabbing"
+                  onPointerDown={handlePanelPointerDown}
+                  onPointerMove={handlePanelPointerMove}
+                  onPointerUp={handlePanelPointerUp}
+                >
+                  <span className="text-white text-xs font-bold uppercase tracking-wider select-none">
+                    {openSection === 'effects' ? `${activeTheme?.active_effect} Settings` : 'Hero Adjustments'}
+                  </span>
+                  <div className="flex gap-1">
+                    <button 
+                      onClick={() => setIsMinimized(true)} 
+                      className="text-white/60 hover:text-white text-xs transition-colors p-1"
+                      onPointerDown={(e) => e.stopPropagation()}
+                    >
+                      —
+                    </button>
+                    <button 
+                      onClick={() => setOpenSection(null)} 
+                      className="text-white/60 hover:text-white text-xs transition-colors p-1"
+                      onPointerDown={(e) => e.stopPropagation()}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
+                
+                {/* Body */}
+                <div className="p-4 bg-[#16162a]">
+                  {openSection === 'effects' ? (
+                    <EffectAdjustmentsForm 
+                      activeTheme={activeTheme} 
+                      customEffects={customEffects || []} 
+                      onSaveCallback={() => setOpenSection(null)} 
+                    />
+                  ) : (
+                    <HeroAdjustmentsPanel 
+                      activeTheme={activeTheme}
+                      onClose={() => setOpenSection(null)} 
+                      onChange={(adjustments) => {
+                        if (iframeRef.current?.contentWindow) {
+                          iframeRef.current.contentWindow.postMessage({
+                            type: 'STUDIO_HERO_ADJUSTMENTS',
+                            ...adjustments
+                          }, '*')
+                        }
+                      }}
+                    />
+                  )}
+                </div>
+              </>
+            )}
           </div>
         )}
       </div>
