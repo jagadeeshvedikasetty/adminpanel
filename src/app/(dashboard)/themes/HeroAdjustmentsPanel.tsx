@@ -29,7 +29,14 @@ export default function HeroAdjustmentsPanel({
         desktopZoom, mobileZoom
       })
     }
-  }, [desktopHeight, mobileHeight, desktopPosition, mobilePosition, desktopZoom, mobileZoom])
+  }, [desktopHeight, mobileHeight, desktopPosition, mobilePosition, desktopZoom, mobileZoom, onChange])
+
+  const handleSubmit = (formData: FormData) => {
+    startTransition(async () => {
+      await updateHeroAdjustments(formData)
+      if (onClose) onClose()
+    })
+  }
 
   // Listen for dragged positions from the live preview
   useEffect(() => {
@@ -49,12 +56,7 @@ export default function HeroAdjustmentsPanel({
     <div className="w-[280px]">
 
 
-      <form action={(fd) => {
-        startTransition(async () => {
-          await updateHeroAdjustments(fd);
-          onClose();
-        });
-      }} className="space-y-4">
+      <form action={handleSubmit} className="space-y-4">
         {/* Desktop */}
         <div className="space-y-2">
           <h4 className="text-[10px] text-orange-400 font-semibold uppercase">Desktop</h4>
