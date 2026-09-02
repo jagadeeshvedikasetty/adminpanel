@@ -142,6 +142,23 @@ export async function updateThemeEffect(effect: string | null) {
   revalidatePath('/themes', 'layout')
 }
 
+export async function applyCustomEffect(url: string) {
+  const supabase = await createClient()
+  const { data: existing } = await supabase.from('themes').select('*').eq('id', 'active_theme').maybeSingle()
+  const { error } = await supabase.from('themes').upsert({
+    id: 'active_theme',
+    name: existing?.name || 'Custom Theme',
+    primary_color: existing?.primary_color || '#770634',
+    secondary_color: existing?.secondary_color || '#000000',
+    active_effect: null,
+    custom_effect_url: url,
+    is_active: true
+  }, { onConflict: 'id' })
+
+  if (error) throw new Error(error.message)
+  revalidatePath('/themes', 'layout')
+}
+
 export async function uploadCustomEffect(formData: FormData) {
   const file = formData.get('file') as File;
   if (!file || file.size === 0) {

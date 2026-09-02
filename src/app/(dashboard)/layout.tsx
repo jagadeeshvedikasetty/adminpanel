@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import festivalsData from '@/data/festivals.json'
+import { getCustomEffects } from './(dashboard)/themes/actions'
 import SidebarNav from './SidebarNav'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -9,9 +10,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  // Fetch active theme for sidebar controls
-  const { data: activeTheme } = await supabase
-    .from('themes').select('*').eq('id', 'active_theme').maybeSingle()
+  // Fetch active theme and custom effects for sidebar controls
+  const [{ data: activeTheme }, customEffects] = await Promise.all([
+    supabase.from('themes').select('*').eq('id', 'active_theme').maybeSingle(),
+    getCustomEffects()
+  ])
 
   const signOut = async () => {
     'use server'
@@ -32,7 +35,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </div>
 
         {/* Nav with inline controls */}
-        <SidebarNav activeTheme={activeTheme} festivals={festivalsData as any} />
+        <SidebarNav activeTheme={activeTheme} festivals={festivalsData as any} customEffects={customEffects} />
 
         {/* Sign out */}
         <div className="px-3 py-2 border-t border-[#2d2d44] shrink-0">

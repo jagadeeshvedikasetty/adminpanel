@@ -12,7 +12,10 @@ import {
   removeHeroImage,
   updateThemeColors,
   uploadCustomEffect,
-  updateHeroText
+  updateHeroText,
+  updateHeroAdjustments,
+  applyCustomEffect,
+  deleteCustomEffect
 } from './themes/actions'
 
 type Theme = {
@@ -33,6 +36,11 @@ type Theme = {
   hero_text_show_mobile?: boolean
   hero_button_show_desktop?: boolean
   hero_button_show_mobile?: boolean
+  hero_desktop_height?: number
+  hero_mobile_height?: number
+  hero_desktop_position?: string
+  hero_mobile_position?: string
+  custom_effect_url?: string | null
 }
 type Festival = {
   id: string; name: string; icon: string; description?: string
@@ -59,7 +67,7 @@ function SectionHeader({ icon, label, open, onToggle }: { icon: string; label: s
   )
 }
 
-export default function SidebarNav({ activeTheme, festivals }: { activeTheme: Theme | null; festivals: Festival[] }) {
+export default function SidebarNav({ activeTheme, festivals, customEffects = [] }: { activeTheme: Theme | null; festivals: Festival[]; customEffects?: any[] }) {
   const pathname = usePathname()
   const router = useRouter()
   const isTheme = pathname.startsWith('/themes')
@@ -197,6 +205,39 @@ export default function SidebarNav({ activeTheme, festivals }: { activeTheme: Th
                 <input type="file" name="file" accept=".json,.svg" className="flex-1 text-[9px] text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[9px] file:bg-indigo-600 file:text-white cursor-pointer min-w-0" />
                 <button type="submit" className="text-[9px] bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700 transition-colors shrink-0">Upload</button>
               </form>
+
+              {/* Custom Effects Grid */}
+              {customEffects && customEffects.length > 0 && (
+                <div className="pt-2 border-t border-[#2d2d44] space-y-2">
+                  <span className="text-[10px] text-[#a0a0c0] font-semibold block">My Uploaded Effects</span>
+                  <div className="grid grid-cols-3 gap-1">
+                    {customEffects.map((ce: any) => {
+                      const isActive = activeTheme?.custom_effect_url === ce.icon_url
+                      return (
+                        <div key={ce.id} className="relative group">
+                          <form action={applyCustomEffect.bind(null, ce.icon_url)}>
+                            <button type="submit" title={ce.name || 'Custom Effect'} className={`w-full flex flex-col items-center gap-0.5 py-1.5 rounded text-[9px] transition-colors ${isActive ? 'bg-indigo-500/20 text-indigo-400 ring-1 ring-indigo-500/40' : 'bg-[#2d2d44] text-[#a0a0c0] hover:bg-[#3d3d5c]'}`}>
+                              {ce.icon_url?.endsWith('.svg') ? (
+                                /* eslint-disable-next-line @next/next/no-img-element */
+                                <img src={ce.icon_url} alt={ce.name} className="w-5 h-5 object-contain opacity-80" />
+                              ) : (
+                                <span className="text-sm leading-none">⚙️</span>
+                              )}
+                              <span className="truncate w-full text-center px-1">{ce.name || 'Effect'}</span>
+                            </button>
+                          </form>
+                          {/* Delete Button */}
+                          <form action={deleteCustomEffect.bind(null, ce.id)} className="absolute -top-1 -right-1 hidden group-hover:block z-10">
+                            <button type="submit" className="bg-red-600 text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center hover:bg-red-700 shadow-sm border border-red-800">
+                              ✕
+                            </button>
+                          </form>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
