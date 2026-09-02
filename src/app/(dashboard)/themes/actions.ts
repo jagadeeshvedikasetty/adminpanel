@@ -336,10 +336,10 @@ export async function updateHeroText(formData: FormData) {
   const { error } = await supabase.from('themes').upsert({
     id: 'active_theme',
     name: existing?.name || 'Custom Theme',
-    hero_title: formData.get('title') || 'Monsoon Sale!',
+    hero_title: formData.get('title') || '',
     hero_subtitle: formData.get('subtitle') || '',
-    hero_button_text: formData.get('buttonText') || 'Shop the Sale',
-    hero_button_link: formData.get('buttonLink') || '/shop',
+    hero_button_text: formData.get('buttonText') || '',
+    hero_button_link: formData.get('buttonLink') || '',
     hero_text_scale_desktop: Number(formData.get('desktopScale')) || 1.0,
     hero_text_scale_mobile: Number(formData.get('mobileScale')) || 1.0,
     hero_text_show_desktop: formData.get('showTextDesktop') === 'true',

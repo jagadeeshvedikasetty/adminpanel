@@ -1,6 +1,7 @@
-import { login } from './actions'
+import { requestReset } from './actions'
+import Link from 'next/link'
 
-export default async function LoginPage({
+export default async function ResetPasswordPage({
   searchParams,
 }: {
   searchParams: Promise<{ error?: string; message?: string }>
@@ -10,7 +11,10 @@ export default async function LoginPage({
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-24 bg-gray-50">
       <div className="w-full max-w-md bg-white rounded-lg shadow-md p-8">
-        <h1 className="text-2xl font-bold mb-6 text-center text-gray-900">Admin Login</h1>
+        <h1 className="text-2xl font-bold mb-2 text-center text-gray-900">Reset Password</h1>
+        <p className="text-sm text-gray-600 mb-6 text-center">
+          Enter your email address and we'll send you a link to reset your password.
+        </p>
         
         {error && (
           <div className="bg-red-50 text-red-500 p-3 rounded-md mb-4 text-sm">
@@ -26,7 +30,7 @@ export default async function LoginPage({
 
         <form className="flex flex-col space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="email">Email</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="email">Email address</label>
             <input 
               id="email" 
               name="email" 
@@ -35,28 +39,20 @@ export default async function LoginPage({
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
-          
-          <div>
-            <div className="flex justify-between items-center mb-1">
-              <label className="block text-sm font-medium text-gray-700" htmlFor="password">Password</label>
-              <a href="/reset-password" className="text-sm text-orange-600 hover:text-orange-500 font-medium">Forgot password?</a>
-            </div>
-            <input 
-              id="password" 
-              name="password" 
-              type="password" 
-              required 
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-          </div>
 
           <button 
-            formAction={login}
+            formAction={requestReset}
             className="w-full bg-orange-500 text-white font-medium py-2 px-4 rounded-md hover:bg-orange-600 transition-colors"
           >
-            Log in
+            Send Reset Link
           </button>
         </form>
+
+        <div className="mt-6 text-center">
+          <Link href="/login" className="text-sm text-orange-600 hover:text-orange-500 font-medium">
+            &larr; Back to login
+          </Link>
+        </div>
       </div>
     </div>
   )
