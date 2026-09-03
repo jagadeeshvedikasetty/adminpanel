@@ -44,7 +44,7 @@ create policy "Allow admins full access" on orders for all to authenticated usin
   }
 
   return (
-    <div>
+    <div className="max-w-7xl mx-auto p-6 md:p-8 pt-16">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Orders Management</h1>
 
       {supabaseError && supabaseError.code === '42P01' && (
