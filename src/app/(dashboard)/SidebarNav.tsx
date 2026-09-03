@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
+import { ICONS } from './themes/icons'
 import {
   applyFestivalTheme,
   updateThemeEffect,
@@ -412,6 +413,31 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
             </div>
           )}
 
+
+          <SectionHeader icon="🎈" label="Add Floating Decorations" open={openSection === 'decorations'} onToggle={() => toggle('decorations')} />
+          {openSection === 'decorations' && (
+            <div className="mx-1 mb-1 bg-[#16162a] rounded border border-[#2d2d44] p-2">
+              <p className="text-xs text-[#a0a0c0] mb-2 text-center">Click to drop onto preview canvas</p>
+              <div className="grid grid-cols-4 gap-2">
+                {Object.keys(ICONS).map((iconName) => (
+                  <button
+                    key={iconName}
+                    onClick={() => {
+                      if (typeof window !== 'undefined') {
+                        window.dispatchEvent(new CustomEvent('ADD_DECORATION', { detail: iconName }))
+                      }
+                    }}
+                    className="aspect-square bg-[#2d2d44] hover:bg-[#3d3d5c] rounded flex items-center justify-center p-1.5 transition-colors border border-transparent hover:border-orange-500/50"
+                    title={`Add ${iconName}`}
+                  >
+                    <div className="w-full h-full pointer-events-none">
+                      {ICONS[iconName]}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           <SectionHeader icon="🌄" label="Hero Banner" open={openSection === 'hero'} onToggle={() => toggle('hero')} />
           {openSection === 'hero' && (
