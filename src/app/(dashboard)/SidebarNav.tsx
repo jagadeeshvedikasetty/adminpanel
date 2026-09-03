@@ -16,6 +16,7 @@ import {
   updateHeroAdjustments,
   applyCustomEffect,
   deleteCustomEffect,
+  createCustomEffect,
   uploadCustomFloatingDecoration,
   deleteCustomFloatingDecoration
 } from './themes/actions'
