@@ -408,39 +408,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
               </form>
             </div>
           )}
-          {/* ── 📐 Hero Adjustments ── */}
-          <SectionHeader icon="📐" label="Hero Adjustments" open={openSection === 'hero-adjust'} onToggle={() => toggle('hero-adjust')} />
-          {openSection === 'hero-adjust' && (
-            <div className="mx-1 mb-1 bg-[#16162a] rounded border border-[#2d2d44] p-2">
-              <p className="text-xs text-[#a0a0c0] text-center leading-relaxed">
-                Controls are now in the floating panel inside the live preview.
-              </p>
-            </div>
-          )}
 
-          {/* ── 🌄 Hero ── */}
-          <SectionHeader icon="🎨" label="Theme Settings" open={themeOpen} onToggle={() => setThemeOpen(!themeOpen)} />
-          {themeOpen && (
-            <div className="bg-[#12121a] py-1 border-t border-[#2d2d44]">
-              {/* Preview View Mode Toggle (Only visible when themes page is active) */}
-              {isTheme && (
-                <div className="mx-2 mb-2 flex bg-[#1e1e2e] p-0.5 rounded border border-[#2d2d44]">
-                  <button 
-                    onClick={() => handleSetViewMode('desktop')} 
-                    className={`flex-1 px-3 py-1 text-xs rounded transition-colors ${viewMode === 'desktop' ? 'bg-[#2d2d44] text-white font-bold shadow-sm' : 'text-[#8080a0] hover:text-white font-medium'}`}
-                  >
-                    Desktop
-                  </button>
-                  <button 
-                    onClick={() => handleSetViewMode('mobile')} 
-                    className={`flex-1 px-3 py-1 text-xs rounded transition-colors ${viewMode === 'mobile' ? 'bg-[#2d2d44] text-white font-bold shadow-sm' : 'text-[#8080a0] hover:text-white font-medium'}`}
-                  >
-                    Mobile
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
 
           <SectionHeader icon="🌄" label="Hero Banner" open={openSection === 'hero'} onToggle={() => toggle('hero')} />
           {openSection === 'hero' && (
