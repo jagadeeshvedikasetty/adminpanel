@@ -5,6 +5,7 @@ import { saveAllDecorations } from './(studio-standalone)/studio/actions'
 import { updateHeroTextCoordinates } from './actions'
 import { ICONS } from './icons'
 import EffectAdjustmentsForm from './EffectAdjustmentsForm'
+import { motion, AnimatePresence } from 'framer-motion'
 import HeroAdjustmentsPanel from './HeroAdjustmentsPanel'
 export default function ThemesPreviewClient({ 
   initialDecorations, 
@@ -257,37 +258,53 @@ export default function ThemesPreviewClient({
         </div>
 
         {/* Floating Panels */}
-        {openSection && (
-          <div
-            className={`draggable-panel absolute z-[99999] ${isMinimized ? 'w-10 h-10 rounded-full' : 'rounded-xl'} flex flex-col overflow-hidden backdrop-blur-md bg-black/60 border border-white/20 shadow-2xl transition-all`}
-            style={panelPos ? {
-              left: `${panelPos.x}px`,
-              top: `${panelPos.y}px`,
-            } : {
-              right: '20px',
-              top: '20px',
-            }}
-          >
-            {isMinimized ? (
-              <button 
-                className="w-full h-full flex items-center justify-center text-white cursor-grab active:cursor-grabbing bg-white/10 hover:bg-white/20 transition-colors"
-                onPointerDown={handlePanelPointerDown}
-                onPointerMove={handlePanelPointerMove}
-                onPointerUp={handlePanelPointerUp}
-                onClick={() => setIsMinimized(false)}
-                title="Restore Panel"
-              >
-                ⚙️
-              </button>
-            ) : (
-              <>
-                {/* Draggable Header */}
-                <div 
-                  className="flex items-center justify-between px-3 py-2 border-b border-white/10 bg-white/5 cursor-grab active:cursor-grabbing"
-                  onPointerDown={handlePanelPointerDown}
-                  onPointerMove={handlePanelPointerMove}
-                  onPointerUp={handlePanelPointerUp}
-                >
+        <AnimatePresence>
+          {openSection && (
+            <motion.div
+              layout
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+              className={`draggable-panel absolute z-[99999] ${isMinimized ? 'w-12 h-12 rounded-full cursor-pointer hover:scale-105' : 'w-[280px] rounded-xl'} flex flex-col overflow-hidden backdrop-blur-md bg-black/60 border border-white/20 shadow-2xl`}
+              style={panelPos ? {
+                left: `${panelPos.x}px`,
+                top: `${panelPos.y}px`,
+              } : {
+                right: '20px',
+                top: '20px',
+              }}
+              onPointerDown={isMinimized ? undefined : handlePanelPointerDown}
+              onPointerMove={isMinimized ? undefined : handlePanelPointerMove}
+              onPointerUp={isMinimized ? undefined : handlePanelPointerUp}
+              onClick={isMinimized ? () => setIsMinimized(false) : undefined}
+            >
+              <AnimatePresence mode="wait">
+                {isMinimized ? (
+                  <motion.div 
+                    key="minimized"
+                    initial={{ opacity: 0, rotate: -90 }}
+                    animate={{ opacity: 1, rotate: 0 }}
+                    exit={{ opacity: 0, rotate: 90 }}
+                    transition={{ duration: 0.2 }}
+                    className="w-full h-full flex items-center justify-center text-white bg-white/10"
+                    title="Restore Panel"
+                  >
+                    ⚙️
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="expanded"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex flex-col w-full h-full"
+                  >
+                    {/* Draggable Header */}
+                    <div 
+                      className="flex items-center justify-between px-3 py-2 border-b border-white/10 bg-white/5 cursor-grab active:cursor-grabbing shrink-0"
+                    >
                   <span className="text-white text-xs font-bold uppercase tracking-wider select-none">
                     {openSection === 'effects-settings' ? `${activeTheme?.active_effect} Settings` : 'Hero Adjustments'}
                   </span>
@@ -332,10 +349,12 @@ export default function ThemesPreviewClient({
                     />
                   )}
                 </div>
-              </>
+              </motion.div>
             )}
-          </div>
+            </AnimatePresence>
+          </motion.div>
         )}
+        </AnimatePresence>
       </div>
     </div>
   )
