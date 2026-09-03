@@ -195,7 +195,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
         <div className="space-y-0.5 ml-1">
 
           {/* Global View Mode Toggle for Admin Editing */}
-          <div className="mx-1 mt-1 mb-2 bg-[#1e1e2e] p-1 rounded flex gap-1 border border-[#2d2d44]">
+          <div className="hidden md:flex mx-1 mt-1 mb-2 bg-[#1e1e2e] p-1 rounded gap-1 border border-[#2d2d44]">
             <button onClick={() => handleSetViewMode('desktop')} className={`flex-1 py-1.5 text-xs font-bold rounded ${viewMode === 'desktop' ? 'bg-[#3d3d5c] text-white shadow' : 'text-[#8080a0] hover:text-white transition-colors'}`}>💻 Desktop Edit</button>
             <button onClick={() => handleSetViewMode('mobile')} className={`flex-1 py-1.5 text-xs font-bold rounded ${viewMode === 'mobile' ? 'bg-[#3d3d5c] text-white shadow' : 'text-[#8080a0] hover:text-white transition-colors'}`}>📱 Mobile Edit</button>
           </div>
