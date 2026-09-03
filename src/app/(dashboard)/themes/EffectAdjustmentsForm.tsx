@@ -83,7 +83,7 @@ export default function EffectAdjustmentsForm({ activeTheme, customEffects, onSa
       {/* Sliders */}
       <form onSubmit={(e) => { e.preventDefault(); handleSubmit(new FormData(e.currentTarget)); }} className="space-y-4">
         <div>
-          <label className="text-[10px] font-medium text-white/80 mb-1 flex justify-between items-center">
+          <label className="text-xs font-medium text-white/80 mb-1 flex justify-between items-center">
             <span>Opacity (Transparency)</span>
             <span className="text-white bg-white/10 px-1.5 py-0.5 rounded font-mono">{Math.round(opacity * 100)}%</span>
           </label>
@@ -96,7 +96,7 @@ export default function EffectAdjustmentsForm({ activeTheme, customEffects, onSa
         </div>
 
         <div>
-          <label className="text-[10px] font-medium text-white/80 mb-1 flex justify-between items-center">
+          <label className="text-xs font-medium text-white/80 mb-1 flex justify-between items-center">
             <span>Scale (Size)</span>
             <span className="text-white bg-white/10 px-1.5 py-0.5 rounded font-mono">{scale.toFixed(1)}x</span>
           </label>
@@ -109,7 +109,7 @@ export default function EffectAdjustmentsForm({ activeTheme, customEffects, onSa
         </div>
 
         <div>
-          <label className="text-[10px] font-medium text-white/80 mb-1 flex justify-between items-center">
+          <label className="text-xs font-medium text-white/80 mb-1 flex justify-between items-center">
             <span>Speed</span>
             <span className="text-white bg-white/10 px-1.5 py-0.5 rounded font-mono">{speed.toFixed(1)}x</span>
           </label>
@@ -122,9 +122,9 @@ export default function EffectAdjustmentsForm({ activeTheme, customEffects, onSa
         </div>
 
         <div>
-          <label className="text-[10px] font-medium text-white/80 mb-1 flex justify-between items-center">
+          <label className="text-xs font-medium text-white/80 mb-1 flex justify-between items-center">
             <span>Amount of Particles</span>
-            <span className="text-orange-400 font-bold bg-orange-500/10 px-1.5 py-0.5 rounded text-[10px]">
+            <span className="text-orange-400 font-bold bg-orange-500/10 px-1.5 py-0.5 rounded text-xs">
               {particleInfo
                 ? `${particleInfo.count} ${particleInfo.unit}`
                 : `${density.toFixed(1)}x`}
@@ -137,35 +137,35 @@ export default function EffectAdjustmentsForm({ activeTheme, customEffects, onSa
             className="w-full accent-orange-500 h-1.5 bg-white/20 rounded-lg appearance-none cursor-pointer"
           />
           {particleInfo && (
-            <p className="text-[9px] text-white/40 mt-1">
+            <p className="text-sm text-white/40 mt-1">
               Move the slider to change how many {particleInfo.unit} appear
             </p>
           )}
         </div>
 
         <div>
-          <label className="text-[10px] font-medium text-white/80 mb-1 flex justify-between items-center">
+          <label className="text-xs font-medium text-white/80 mb-1 flex justify-between items-center">
             <span>Duration (Timer)</span>
           </label>
           <select 
             name="duration" 
             value={duration}
             onChange={e => setDuration(parseInt(e.target.value, 10))}
-            className="w-full bg-[#1e1e2e] text-white/90 border border-[#2d2d44] rounded px-2 py-1.5 text-[10px] focus:outline-none focus:border-orange-500"
+            className="w-full bg-[#1e1e2e] text-white/90 border border-[#2d2d44] rounded px-2 py-1.5 text-xs focus:outline-none focus:border-orange-500"
           >
             <option value="0">Infinite</option>
             <option value="5">5 seconds</option>
             <option value="10">10 seconds</option>
             <option value="30">30 seconds</option>
           </select>
-          <p className="text-[9px] text-white/40 mt-1">
+          <p className="text-sm text-white/40 mt-1">
             If a time is selected, the effect will smoothly fade out after it finishes.
           </p>
         </div>
 
         <button 
           type="submit" disabled={isPending}
-          className="mt-4 w-full py-2 rounded text-[11px] font-bold transition-all bg-orange-500 text-white hover:bg-orange-600 shadow-lg disabled:opacity-50"
+          className="mt-4 w-full py-2 rounded text-sm font-bold transition-all bg-orange-500 text-white hover:bg-orange-600 shadow-lg disabled:opacity-50"
         >
           {isPending ? 'Saving...' : 'Save Adjustments'}
         </button>
