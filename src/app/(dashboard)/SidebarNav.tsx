@@ -402,9 +402,12 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
                   <span className="text-sm text-[#6c6c8a]">No background set</span>
                 </div>
               )}
-              <form onSubmit={async (e) => { e.preventDefault(); await uploadThemeBackground(new FormData(e.currentTarget)); }} className="flex gap-1 items-center">
-                <input type="file" name="file" accept="image/*" required className="flex-1 text-sm text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-sm file:bg-orange-500 file:text-white cursor-pointer min-w-0" />
-                <button type="submit" className="text-sm bg-orange-500 text-white px-2 py-1 rounded hover:bg-orange-600 transition-colors shrink-0">Upload</button>
+              <form onSubmit={async (e) => { e.preventDefault(); await uploadThemeBackground(new FormData(e.currentTarget)); }} className="flex flex-col gap-1 mt-1">
+                <div className="flex gap-1 items-center">
+                  <input type="file" name="file" accept="image/*" required className="flex-1 text-sm text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-sm file:bg-orange-500 file:text-white cursor-pointer min-w-0" />
+                  <button type="submit" className="text-sm bg-orange-500 text-white px-2 py-1 rounded hover:bg-orange-600 transition-colors shrink-0">Upload</button>
+                </div>
+                <p className="text-[10px] text-[#8080a0] px-1">Recommended: 1920x1080 (16:9 widescreen)</p>
               </form>
             </div>
           )}
@@ -430,10 +433,13 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
                     <span className="text-sm text-[#6c6c8a]">Using default desktop hero</span>
                   </div>
                 )}
-                <form onSubmit={async (e) => { e.preventDefault(); await uploadHeroImage(new FormData(e.currentTarget)); }} className="flex gap-1 items-center">
-                  <input type="file" name="file" accept="image/*" required className="flex-1 text-sm text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-sm file:bg-indigo-600 file:text-white cursor-pointer min-w-0" />
-                  <input type="hidden" name="isMobile" value="false" />
-                  <button type="submit" className="text-sm bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700 transition-colors shrink-0">Upload</button>
+                <form onSubmit={async (e) => { e.preventDefault(); await uploadHeroImage(new FormData(e.currentTarget)); }} className="flex flex-col gap-1 mt-1">
+                  <div className="flex gap-1 items-center">
+                    <input type="file" name="file" accept="image/*" required className="flex-1 text-sm text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-sm file:bg-indigo-600 file:text-white cursor-pointer min-w-0" />
+                    <input type="hidden" name="isMobile" value="false" />
+                    <button type="submit" className="text-sm bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700 transition-colors shrink-0">Upload</button>
+                  </div>
+                  <p className="text-[10px] text-[#8080a0] px-1">Recommended: 1920x1080 (16:9) or 21:9 ultrawide</p>
                 </form>
               </div>
 
@@ -453,10 +459,13 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
                     <span className="text-sm text-[#6c6c8a]">Falls back to desktop</span>
                   </div>
                 )}
-                <form onSubmit={async (e) => { e.preventDefault(); await uploadHeroImage(new FormData(e.currentTarget)); }} className="flex gap-1 items-center">
-                  <input type="file" name="file" accept="image/*" required className="flex-1 text-sm text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-sm file:bg-indigo-600 file:text-white cursor-pointer min-w-0" />
-                  <input type="hidden" name="isMobile" value="true" />
-                  <button type="submit" className="text-sm bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700 transition-colors shrink-0">Upload</button>
+                <form onSubmit={async (e) => { e.preventDefault(); await uploadHeroImage(new FormData(e.currentTarget)); }} className="flex flex-col gap-1 mt-1">
+                  <div className="flex gap-1 items-center">
+                    <input type="file" name="file" accept="image/*" required className="flex-1 text-sm text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-sm file:bg-indigo-600 file:text-white cursor-pointer min-w-0" />
+                    <input type="hidden" name="isMobile" value="true" />
+                    <button type="submit" className="text-sm bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700 transition-colors shrink-0">Upload</button>
+                  </div>
+                  <p className="text-[10px] text-[#8080a0] px-1">Recommended: 1080x1350 (4:5) or 9:16 vertical</p>
                 </form>
               </div>
 

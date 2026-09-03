@@ -88,7 +88,7 @@ export default function EditProductForm({ product }: { product: any }) {
             </div>
           )}
           <input type="file" name="imageFile" accept="image/*" onChange={handleImageChange} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
-          <p className="text-xs text-gray-500 mt-1">Select a new image to replace the current one.</p>
+          <p className="text-xs text-gray-500 mt-1">Select a new image to replace the current one. Recommended: 1080x1080 (1:1 square).</p>
         </div>
         
         <div>
@@ -118,6 +118,7 @@ export default function EditProductForm({ product }: { product: any }) {
           </div>
 
           <input type="file" name="videoFile" accept="video/mp4,video/webm" onChange={handleVideoChange} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100" />
+          <p className="text-xs text-gray-500 mt-1">Select a new video to replace the current one. Recommended: 1080x1080 (1:1 square).</p>
           <p className="text-xs text-gray-500 mt-1">Short .mp4 clip (no audio) to play on hover.</p>
         </div>
       </div>
