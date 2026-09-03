@@ -330,58 +330,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
                 </div>
               )}
               
-              {/* Floating Decorations */}
-              <div className="pt-2 border-t border-[#2d2d44] space-y-2">
-                <span className="text-xs text-[#a0a0c0] font-semibold block">Add Floating Decorations</span>
-                <div className="grid grid-cols-5 gap-1">
-                  {DECORATION_ICONS.map(icon => (
-                    <button
-                      key={icon}
-                      onClick={() => handleAddDecoration(icon)}
-                      title={`Add ${icon}`}
-                      className="aspect-square rounded bg-[#2d2d44] hover:bg-[#3d3d5c] text-white flex items-center justify-center transition-colors"
-                    >
-                      <span className="w-4 h-4">{ICONS[icon as keyof typeof ICONS]}</span>
-                    </button>
-                  ))}
-                </div>
 
-                <form onSubmit={async (e) => { e.preventDefault(); await uploadCustomFloatingDecoration(new FormData(e.currentTarget)); }} className="flex gap-1 items-center mt-2">
-                  <input type="file" name="file" accept=".json,.svg,.png,.webp" className="flex-1 text-sm text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-sm file:bg-indigo-600 file:text-white cursor-pointer min-w-0" />
-                  <button type="submit" className="text-sm bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700 transition-colors shrink-0">Upload</button>
-                </form>
-
-                {customFloatingDecorations && customFloatingDecorations.length > 0 && (
-                  <div className="pt-2 mt-2 border-t border-[#2d2d44] space-y-2">
-                    <span className="text-xs text-[#a0a0c0] font-semibold block">My Uploaded Decorations</span>
-                    <div className="grid grid-cols-3 gap-1">
-                      {customFloatingDecorations.map((cd: any) => (
-                        <div key={cd.id} className="relative group">
-                          <button 
-                            onClick={() => handleAddDecoration(cd.icon_url)} 
-                            title={cd.name || 'Custom Decoration'} 
-                            className="w-full flex flex-col items-center gap-0.5 py-1.5 rounded text-sm bg-[#2d2d44] text-[#a0a0c0] hover:bg-[#3d3d5c] transition-colors"
-                          >
-                            {cd.icon_url?.endsWith('.json') ? (
-                              <span className="text-sm leading-none">⚙️</span>
-                            ) : (
-                              /* eslint-disable-next-line @next/next/no-img-element */
-                              <img src={cd.icon_url} alt={cd.name} className="w-5 h-5 object-contain opacity-80" />
-                            )}
-                            <span className="truncate w-full text-center px-1">{cd.name || 'Decoration'}</span>
-                          </button>
-                          {/* Delete Button */}
-                          <div className="absolute -top-1 -right-1 hidden group-hover:block z-10">
-                            <button type="button" onClick={async () => { await deleteCustomFloatingDecoration(cd.id) }} className="bg-red-600 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center hover:bg-red-700 shadow-sm border border-red-800">
-                              ✕
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
             </div>
           )}
 
@@ -415,8 +364,8 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
 
           <SectionHeader icon="🎈" label="Add Floating Decorations" open={openSection === 'decorations'} onToggle={() => toggle('decorations')} />
           {openSection === 'decorations' && (
-            <div className="mx-1 mb-1 bg-[#16162a] rounded border border-[#2d2d44] p-2">
-              <p className="text-xs text-[#a0a0c0] mb-2 text-center">Click to drop onto preview canvas</p>
+            <div className="mx-1 mb-1 bg-[#16162a] rounded border border-[#2d2d44] p-2 space-y-3">
+              <p className="text-xs text-[#a0a0c0] text-center">Click to drop onto preview canvas</p>
               <div className="grid grid-cols-4 gap-2">
                 {Object.keys(ICONS).map((iconName) => (
                   <button
@@ -435,6 +384,51 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
                   </button>
                 ))}
               </div>
+
+              <div className="pt-2 border-t border-[#2d2d44]">
+                <form onSubmit={async (e) => { e.preventDefault(); await uploadCustomFloatingDecoration(new FormData(e.currentTarget)); }} className="flex flex-col gap-1 mt-1 p-2 bg-[#1e1e2e] rounded border border-[#2d2d44]">
+                  <span className="text-xs text-[#a0a0c0] font-semibold">Upload Custom Decoration</span>
+                  <div className="flex gap-1 items-center mt-1">
+                    <input type="file" name="file" accept=".json,.svg,.png,.webp" className="flex-1 text-sm text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-sm file:bg-indigo-600 file:text-white cursor-pointer min-w-0" />
+                    <button type="submit" className="text-sm bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700 transition-colors shrink-0">Upload</button>
+                  </div>
+                </form>
+              </div>
+
+              {customFloatingDecorations && customFloatingDecorations.length > 0 && (
+                <div className="pt-2 border-t border-[#2d2d44] space-y-2">
+                  <span className="text-xs text-[#a0a0c0] font-semibold block">My Uploaded Decorations</span>
+                  <div className="grid grid-cols-3 gap-1">
+                    {customFloatingDecorations.map((cd: any) => (
+                      <div key={cd.id} className="relative group">
+                        <button 
+                          onClick={() => {
+                            if (typeof window !== 'undefined') {
+                              window.dispatchEvent(new CustomEvent('ADD_DECORATION', { detail: cd.icon_url }))
+                            }
+                          }} 
+                          title={cd.name || 'Custom Decoration'} 
+                          className="w-full flex flex-col items-center gap-0.5 py-1.5 rounded text-sm bg-[#2d2d44] text-[#a0a0c0] hover:bg-[#3d3d5c] transition-colors"
+                        >
+                          {cd.icon_url?.endsWith('.json') ? (
+                            <span className="text-sm leading-none">⚙️</span>
+                          ) : (
+                            /* eslint-disable-next-line @next/next/no-img-element */
+                            <img src={cd.icon_url} alt={cd.name} className="w-5 h-5 object-contain opacity-80" />
+                          )}
+                          <span className="truncate w-full text-center px-1">{cd.name || 'Decoration'}</span>
+                        </button>
+                        {/* Delete Button */}
+                        <div className="absolute -top-1 -right-1 hidden group-hover:block z-10">
+                          <button type="button" onClick={async () => { await deleteCustomFloatingDecoration(cd.id) }} className="bg-red-600 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center hover:bg-red-700 shadow-sm border border-red-800">
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
