@@ -14,9 +14,9 @@ export default async function ProductsPage() {
     <div className="max-w-7xl mx-auto p-6 md:p-8 pt-16">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Products Management</h1>
-        <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md transition-colors shadow-sm">
+        <Link href="/products/new" className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md transition-colors shadow-sm">
           + Add New Product
-        </button>
+        </Link>
       </div>
 
       {error ? (

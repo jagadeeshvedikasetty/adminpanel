@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { updateProduct } from './actions'
+import { updateProduct, createProduct } from './actions'
 
 export default function EditProductForm({ product }: { product: any }) {
   const [variants, setVariants] = useState<any[]>(product.variants || [])
@@ -54,8 +54,11 @@ export default function EditProductForm({ product }: { product: any }) {
   }
 
   const handleSubmit = async (formData: FormData) => {
-    // variants are sent via hidden inputs or we can let the action parse them from form names
-    const result = await updateProduct(product.id, formData)
+    const isNew = product.id === 'new'
+    const result = isNew 
+      ? await createProduct(formData)
+      : await updateProduct(product.id, formData)
+      
     if (result && !result.success) {
       setError(result.error)
     }
