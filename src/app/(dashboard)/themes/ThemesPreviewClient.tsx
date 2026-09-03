@@ -6,9 +6,6 @@ import { updateHeroTextCoordinates } from './actions'
 import { ICONS } from './icons'
 import EffectAdjustmentsForm from './EffectAdjustmentsForm'
 import HeroAdjustmentsPanel from './HeroAdjustmentsPanel'
-
-const DECORATION_ICONS = ['kite', 'diya', 'mango', 'flower', 'sparkle']
-
 export default function ThemesPreviewClient({ 
   initialDecorations, 
   version = '1',
@@ -135,16 +132,42 @@ export default function ThemesPreviewClient({
     window.addEventListener('message', handleMessage)
     
     const handleSectionChange = (e: any) => {
-      setOpenSection(e.detail)
-      setIsMinimized(false)
+      if (['effects-settings', 'hero'].includes(e.detail)) {
+        setOpenSection(e.detail)
+        setIsMinimized(false)
+      } else {
+        setOpenSection(null)
+      }
     }
     window.addEventListener('ADMIN_SECTION_CHANGED', handleSectionChange)
+
+    const handleSetViewMode = (e: any) => {
+      setViewMode(e.detail)
+    }
+    window.addEventListener('SET_VIEW_MODE', handleSetViewMode)
+
+    const handleAddDecorationEvent = (e: any) => {
+      handleAdd(e.detail)
+    }
+    window.addEventListener('ADD_DECORATION', handleAddDecorationEvent)
+
+    const handleRequestSave = () => {
+      handleSave()
+    }
+    window.addEventListener('REQUEST_SAVE_DECORATIONS', handleRequestSave)
     
     return () => {
       window.removeEventListener('message', handleMessage)
       window.removeEventListener('ADMIN_SECTION_CHANGED', handleSectionChange)
+      window.removeEventListener('SET_VIEW_MODE', handleSetViewMode)
+      window.removeEventListener('ADD_DECORATION', handleAddDecorationEvent)
+      window.removeEventListener('REQUEST_SAVE_DECORATIONS', handleRequestSave)
     }
-  }, [decorations, selectedId, openSection])
+  }, [decorations, selectedId, openSection, hasUnsaved])
+
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('UNSAVED_CHANGES', { detail: hasUnsaved }))
+  }, [hasUnsaved])
 
   // Send updates to the iframe when state changes
   useEffect(() => {
@@ -202,61 +225,21 @@ export default function ThemesPreviewClient({
   const selected = decorations.find(d => d.id === selectedId)
 
   return (
-    <div className="flex flex-col h-full bg-gray-900 overflow-hidden w-full m-0 p-0">
-      {/* Studio Toolbar */}
-      <div className="h-12 bg-[#1e1e2e] border-b border-[#2d2d44] flex items-center justify-between px-4 shrink-0">
-        <div className="flex items-center gap-2">
-          <span className="text-white text-sm font-semibold">🪁 Live Preview</span>
-          <span className="text-[#a0a0c0] text-xs hidden sm:inline">Drag decorations on the preview below</span>
+    <div className="flex flex-col h-screen bg-[#12121a] overflow-hidden w-full m-0 p-0 relative">
+      
+      {/* Floating Decoration Controls */}
+      {selected && (
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 bg-[#1e1e2e]/90 backdrop-blur border border-[#2d2d44] shadow-2xl rounded-full px-4 py-2 pointer-events-auto">
+          <span className="text-[10px] text-[#a0a0c0] font-semibold tracking-wider uppercase mr-2">Selected Icon</span>
+          <button onClick={() => handleResize(selected.id, -0.2)} className="text-white text-sm w-7 h-7 flex items-center justify-center hover:bg-[#3d3d5c] rounded-full bg-[#2d2d44] transition-colors">−</button>
+          <button onClick={() => handleResize(selected.id, 0.2)} className="text-white text-sm w-7 h-7 flex items-center justify-center hover:bg-[#3d3d5c] rounded-full bg-[#2d2d44] transition-colors">+</button>
+          <div className="w-px h-4 bg-[#3d3d5c] mx-1"></div>
+          <button onClick={() => { handleDelete(selected.id); setSelectedId(null) }} className="text-red-400 text-xs w-7 h-7 flex items-center justify-center hover:bg-red-500/20 hover:text-red-300 rounded-full transition-colors">✕</button>
         </div>
-        <div className="flex items-center gap-2">
-          {/* View Mode Toggle */}
-          <div className="flex bg-[#12121a] p-0.5 rounded mr-2">
-            <button 
-              onClick={() => setViewMode('desktop')} 
-              className={`px-3 py-1 text-xs rounded transition-colors ${viewMode === 'desktop' ? 'bg-[#2d2d44] text-white font-bold shadow-sm' : 'text-[#8080a0] hover:text-white font-medium'}`}
-            >
-              Desktop
-            </button>
-            <button 
-              onClick={() => setViewMode('mobile')} 
-              className={`px-3 py-1 text-xs rounded transition-colors ${viewMode === 'mobile' ? 'bg-[#2d2d44] text-white font-bold shadow-sm' : 'text-[#8080a0] hover:text-white font-medium'}`}
-            >
-              Mobile
-            </button>
-          </div>
-
-          {/* Add decoration buttons */}
-          {DECORATION_ICONS.map(icon => (
-            <button
-              key={icon}
-              onClick={() => handleAdd(icon)}
-              title={`Add ${icon}`}
-              className="w-7 h-7 rounded bg-[#2d2d44] hover:bg-[#3d3d5c] text-white text-xs flex items-center justify-center transition-colors"
-            >
-              <span className="w-4 h-4">{ICONS[icon]}</span>
-            </button>
-          ))}
-
-          {selected && (
-            <div className="flex items-center gap-1 ml-2 bg-[#2d2d44] rounded px-2 py-1">
-              <button onClick={() => handleResize(selected.id, -0.2)} className="text-white text-xs w-5 h-5 flex items-center justify-center hover:bg-[#3d3d5c] rounded">−</button>
-              <button onClick={() => handleResize(selected.id, 0.2)} className="text-white text-xs w-5 h-5 flex items-center justify-center hover:bg-[#3d3d5c] rounded">+</button>
-              <button onClick={() => { handleDelete(selected.id); setSelectedId(null) }} className="text-red-400 text-xs ml-1 hover:text-red-300">✕</button>
-            </div>
-          )}
-          <button
-            onClick={handleSave}
-            disabled={!hasUnsaved || isSaving}
-            className={`px-3 py-1 rounded text-xs font-bold transition-all ${hasUnsaved ? 'bg-orange-500 hover:bg-orange-600 text-white' : 'bg-[#2d2d44] text-[#6c6c8a] cursor-not-allowed'}`}
-          >
-            {isSaving ? 'Saving…' : hasUnsaved ? '💾 Save' : '✓ Saved'}
-          </button>
-        </div>
-      </div>
+      )}
 
       {/* Preview Canvas */}
-      <div className="flex-1 relative bg-[#12121a] flex items-center justify-center overflow-hidden">
+      <div className="flex-1 w-full h-full relative flex items-center justify-center overflow-hidden">
         {/* Client website iframe container */}
         <div 
           className={`relative transition-all duration-500 ease-in-out ${
@@ -306,7 +289,7 @@ export default function ThemesPreviewClient({
                   onPointerUp={handlePanelPointerUp}
                 >
                   <span className="text-white text-xs font-bold uppercase tracking-wider select-none">
-                    {openSection === 'effects' ? `${activeTheme?.active_effect} Settings` : 'Hero Adjustments'}
+                    {openSection === 'effects-settings' ? `${activeTheme?.active_effect} Settings` : 'Hero Adjustments'}
                   </span>
                   <div className="flex gap-1">
                     <button 
@@ -328,7 +311,7 @@ export default function ThemesPreviewClient({
                 
                 {/* Body */}
                 <div className="p-4 bg-[#16162a]">
-                  {openSection === 'effects' ? (
+                  {openSection === 'effects-settings' ? (
                     <EffectAdjustmentsForm 
                       activeTheme={activeTheme} 
                       customEffects={customEffects || []} 

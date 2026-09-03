@@ -232,7 +232,7 @@ export async function getCustomEffects() {
   const supabase = await createClient()
   const { data, error } = await supabase.from('custom_effects').select('*').order('created_at', { ascending: true })
   if (error) {
-    console.error('Error fetching custom effects:', error)
+    console.error('Error fetching custom effects:', JSON.stringify(error, null, 2))
     return []
   }
   return data || []
@@ -286,6 +286,71 @@ export async function deleteCustomEffect(id: string) {
   const adminSupabase = createSupabaseClient(supabaseUrl, supabaseServiceKey)
 
   const { error } = await adminSupabase.from('custom_effects').delete().eq('id', id)
+  
+  if (error) {
+    return { success: false, error: error.message }
+  }
+  
+  revalidatePath('/themes', 'layout')
+  return { success: true }
+}
+
+export async function getCustomFloatingDecorations() {
+  const supabase = await createClient()
+  const { data, error } = await supabase.from('custom_floating_decorations').select('*').order('created_at', { ascending: true })
+  if (error) {
+    console.error('Error fetching custom floating decorations:', JSON.stringify(error, null, 2))
+    return []
+  }
+  return data || []
+}
+
+export async function uploadCustomFloatingDecoration(formData: FormData) {
+  const file = formData.get('file') as File
+  if (!file || file.size === 0) {
+    return { success: false, error: 'Missing file' }
+  }
+
+  const name = file.name
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+  const adminSupabase = createSupabaseClient(supabaseUrl, supabaseServiceKey)
+
+  const fileExt = file.name.split('.').pop()
+  const fileName = `floating-${Date.now()}.${fileExt}`
+
+  const { data: uploadData, error: uploadError } = await adminSupabase.storage
+    .from('floating_decorations')
+    .upload(fileName, file)
+
+  if (uploadError) {
+    return { success: false, error: uploadError.message }
+  }
+
+  const { data: publicUrlData } = adminSupabase.storage
+    .from('floating_decorations')
+    .getPublicUrl(fileName)
+
+  const { error: dbError } = await adminSupabase.from('custom_floating_decorations').insert({
+    name,
+    icon_url: publicUrlData.publicUrl
+  })
+
+  if (dbError) {
+    return { success: false, error: dbError.message }
+  }
+
+  revalidatePath('/themes', 'layout')
+  return { success: true }
+}
+
+export async function deleteCustomFloatingDecoration(id: string) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+  const adminSupabase = createSupabaseClient(supabaseUrl, supabaseServiceKey)
+
+  const { error } = await adminSupabase.from('custom_floating_decorations').delete().eq('id', id)
   
   if (error) {
     return { success: false, error: error.message }

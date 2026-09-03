@@ -2,8 +2,9 @@ import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import festivalsData from '@/data/festivals.json'
-import { getCustomEffects } from './themes/actions'
+import { getCustomEffects, getCustomFloatingDecorations } from './themes/actions'
 import SidebarNav from './SidebarNav'
+import ClientSidebar from './ClientSidebar'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient()
@@ -11,9 +12,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
   if (!user) redirect('/login')
 
   // Fetch active theme and custom effects for sidebar controls
-  const [{ data: activeTheme }, customEffects] = await Promise.all([
+  const [{ data: activeTheme }, customEffects, customFloatingDecorations] = await Promise.all([
     supabase.from('themes').select('*').eq('id', 'active_theme').maybeSingle(),
-    getCustomEffects()
+    getCustomEffects(),
+    getCustomFloatingDecorations()
   ])
 
   const signOut = async () => {
@@ -27,7 +29,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <div className="flex h-screen bg-gray-100 overflow-hidden">
       {/* Dark VS Code-style Sidebar */}
-      <aside className="w-[300px] min-w-[300px] bg-[#1e1e2e] flex flex-col h-screen overflow-hidden">
+      <ClientSidebar>
         {/* Header */}
         <div className="px-4 py-3 border-b border-[#2d2d44] shrink-0">
           <h2 className="text-sm font-bold text-orange-400 tracking-wide">Janani Admin</h2>
@@ -35,7 +37,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </div>
 
         {/* Nav with inline controls */}
-        <SidebarNav activeTheme={activeTheme} festivals={festivalsData as any} customEffects={customEffects} />
+        <SidebarNav activeTheme={activeTheme} festivals={festivalsData as any} customEffects={customEffects} customFloatingDecorations={customFloatingDecorations} />
 
         {/* Sign out */}
         <div className="px-3 py-2 border-t border-[#2d2d44] shrink-0">
@@ -45,7 +47,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
             </button>
           </form>
         </div>
-      </aside>
+      </ClientSidebar>
 
       {/* Main Content — no padding so /themes page can go edge-to-edge */}
       <main className="flex-1 overflow-y-auto">

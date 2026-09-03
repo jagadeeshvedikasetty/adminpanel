@@ -15,8 +15,11 @@ import {
   updateHeroText,
   updateHeroAdjustments,
   applyCustomEffect,
-  deleteCustomEffect
+  deleteCustomEffect,
+  uploadCustomFloatingDecoration,
+  deleteCustomFloatingDecoration
 } from './themes/actions'
+import { ICONS } from './themes/icons'
 
 type Theme = {
   name?: string
@@ -56,6 +59,8 @@ const EFFECTS = [
   { id: 'none', icon: '🚫', label: 'None' },
 ]
 
+const DECORATION_ICONS = ['kite', 'diya', 'mango', 'flower', 'sparkle']
+
 function Divider() { return <div className="border-t border-[#2d2d44] my-1" /> }
 
 function SectionHeader({ icon, label, open, onToggle }: { icon: string; label: string; open: boolean; onToggle: () => void }) {
@@ -67,7 +72,7 @@ function SectionHeader({ icon, label, open, onToggle }: { icon: string; label: s
   )
 }
 
-export default function SidebarNav({ activeTheme, festivals, customEffects = [] }: { activeTheme: Theme | null; festivals: Festival[]; customEffects?: any[] }) {
+export default function SidebarNav({ activeTheme, festivals, customEffects = [], customFloatingDecorations = [] }: { activeTheme: Theme | null; festivals: Festival[]; customEffects?: any[]; customFloatingDecorations?: any[] }) {
   const pathname = usePathname()
   const router = useRouter()
   const isTheme = pathname.startsWith('/themes')
@@ -79,10 +84,30 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [] 
   const [heroMobileHeight, setHeroMobileHeight] = useState(activeTheme?.hero_mobile_height ?? 60)
   const [heroDesktopPosition, setHeroDesktopPosition] = useState(activeTheme?.hero_desktop_position ?? 'center')
   const [heroMobilePosition, setHeroMobilePosition] = useState(activeTheme?.hero_mobile_position ?? 'center')
+  const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop')
+  const [hasUnsaved, setHasUnsaved] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
+  const handleSetViewMode = (mode: 'desktop' | 'mobile') => {
+    setViewMode(mode)
+    window.dispatchEvent(new CustomEvent('SET_VIEW_MODE', { detail: mode }))
+  }
+
+  const handleAddDecoration = (iconName: string) => {
+    window.dispatchEvent(new CustomEvent('ADD_DECORATION', { detail: iconName }))
+  }
 
   useEffect(() => {
     window.dispatchEvent(new CustomEvent('ADMIN_SECTION_CHANGED', { detail: openSection }))
   }, [openSection])
+
+  useEffect(() => {
+    const handleUnsaved = (e: any) => {
+      setHasUnsaved(e.detail)
+      if (!e.detail) setIsSaving(false)
+    }
+    window.addEventListener('UNSAVED_CHANGES', handleUnsaved)
+    return () => window.removeEventListener('UNSAVED_CHANGES', handleUnsaved)
+  }, [])
 
   useEffect(() => {
     if (activeTheme) {
@@ -103,8 +128,32 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [] 
     </Link>
   )
 
+  const handleSaveDecorations = () => {
+    setIsSaving(true)
+    window.dispatchEvent(new CustomEvent('REQUEST_SAVE_DECORATIONS'))
+  }
+
   return (
-    <nav className="flex-1 overflow-y-auto px-2 py-2 space-y-0.5">
+    <div className="flex-1 overflow-y-auto scrollbar-hide flex flex-col relative">
+      
+      {/* Sticky Save Button (only visible on Themes page when there are unsaved changes) */}
+      {isTheme && hasUnsaved && (
+        <div className="sticky top-0 z-50 p-2 bg-[#1e1e2e]/90 backdrop-blur border-b border-[#2d2d44]">
+          <button
+            onClick={handleSaveDecorations}
+            disabled={isSaving}
+            className={`w-full py-1.5 rounded text-[11px] font-bold transition-all shadow-md ${
+              isSaving 
+                ? 'bg-orange-500/50 text-white cursor-not-allowed' 
+                : 'bg-orange-500 hover:bg-orange-600 text-white'
+            }`}
+          >
+            {isSaving ? 'Saving...' : '💾 Save Layout Changes'}
+          </button>
+        </div>
+      )}
+
+      <nav className="p-2 space-y-0.5">
       {navLink('/', '🏠', 'Dashboard')}
       {navLink('/products', '📦', 'Products')}
       {navLink('/orders', '📋', 'Orders')}
@@ -242,7 +291,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [] 
                 <div className="pt-1 border-t border-[#2d2d44]">
                   <button 
                     onClick={() => {
-                      window.dispatchEvent(new CustomEvent('ADMIN_SECTION_CHANGED', { detail: 'effects' }))
+                      window.dispatchEvent(new CustomEvent('ADMIN_SECTION_CHANGED', { detail: 'effects-settings' }))
                     }} 
                     className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded text-[10px] bg-[#2d2d44] text-orange-400 hover:bg-[#3d3d5c] transition-colors border border-orange-500/20 hover:border-orange-500/40"
                   >
@@ -251,6 +300,59 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [] 
                   </button>
                 </div>
               )}
+              
+              {/* Floating Decorations */}
+              <div className="pt-2 border-t border-[#2d2d44] space-y-2">
+                <span className="text-[10px] text-[#a0a0c0] font-semibold block">Add Floating Decorations</span>
+                <div className="grid grid-cols-5 gap-1">
+                  {DECORATION_ICONS.map(icon => (
+                    <button
+                      key={icon}
+                      onClick={() => handleAddDecoration(icon)}
+                      title={`Add ${icon}`}
+                      className="aspect-square rounded bg-[#2d2d44] hover:bg-[#3d3d5c] text-white flex items-center justify-center transition-colors"
+                    >
+                      <span className="w-4 h-4">{ICONS[icon as keyof typeof ICONS]}</span>
+                    </button>
+                  ))}
+                </div>
+
+                <form onSubmit={async (e) => { e.preventDefault(); await uploadCustomFloatingDecoration(new FormData(e.currentTarget)); }} className="flex gap-1 items-center mt-2">
+                  <input type="file" name="file" accept=".json,.svg,.png,.webp" className="flex-1 text-[9px] text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[9px] file:bg-indigo-600 file:text-white cursor-pointer min-w-0" />
+                  <button type="submit" className="text-[9px] bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700 transition-colors shrink-0">Upload</button>
+                </form>
+
+                {customFloatingDecorations && customFloatingDecorations.length > 0 && (
+                  <div className="pt-2 mt-2 border-t border-[#2d2d44] space-y-2">
+                    <span className="text-[10px] text-[#a0a0c0] font-semibold block">My Uploaded Decorations</span>
+                    <div className="grid grid-cols-3 gap-1">
+                      {customFloatingDecorations.map((cd: any) => (
+                        <div key={cd.id} className="relative group">
+                          <button 
+                            onClick={() => handleAddDecoration(cd.icon_url)} 
+                            title={cd.name || 'Custom Decoration'} 
+                            className="w-full flex flex-col items-center gap-0.5 py-1.5 rounded text-[9px] bg-[#2d2d44] text-[#a0a0c0] hover:bg-[#3d3d5c] transition-colors"
+                          >
+                            {cd.icon_url?.endsWith('.json') ? (
+                              <span className="text-sm leading-none">⚙️</span>
+                            ) : (
+                              /* eslint-disable-next-line @next/next/no-img-element */
+                              <img src={cd.icon_url} alt={cd.name} className="w-5 h-5 object-contain opacity-80" />
+                            )}
+                            <span className="truncate w-full text-center px-1">{cd.name || 'Decoration'}</span>
+                          </button>
+                          {/* Delete Button */}
+                          <div className="absolute -top-1 -right-1 hidden group-hover:block z-10">
+                            <button type="button" onClick={async () => { await deleteCustomFloatingDecoration(cd.id) }} className="bg-red-600 text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center hover:bg-red-700 shadow-sm border border-red-800">
+                              ✕
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
@@ -288,6 +390,29 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [] 
           )}
 
           {/* ── 🌄 Hero ── */}
+          <SectionHeader icon="🎨" label="Theme Settings" open={themeOpen} onToggle={() => setThemeOpen(!themeOpen)} />
+          {themeOpen && (
+            <div className="bg-[#12121a] py-1 border-t border-[#2d2d44]">
+              {/* Preview View Mode Toggle (Only visible when themes page is active) */}
+              {isTheme && (
+                <div className="mx-2 mb-2 flex bg-[#1e1e2e] p-0.5 rounded border border-[#2d2d44]">
+                  <button 
+                    onClick={() => handleSetViewMode('desktop')} 
+                    className={`flex-1 px-3 py-1 text-[10px] rounded transition-colors ${viewMode === 'desktop' ? 'bg-[#2d2d44] text-white font-bold shadow-sm' : 'text-[#8080a0] hover:text-white font-medium'}`}
+                  >
+                    Desktop
+                  </button>
+                  <button 
+                    onClick={() => handleSetViewMode('mobile')} 
+                    className={`flex-1 px-3 py-1 text-[10px] rounded transition-colors ${viewMode === 'mobile' ? 'bg-[#2d2d44] text-white font-bold shadow-sm' : 'text-[#8080a0] hover:text-white font-medium'}`}
+                  >
+                    Mobile
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
           <SectionHeader icon="🌄" label="Hero Banner" open={openSection === 'hero'} onToggle={() => toggle('hero')} />
           {openSection === 'hero' && (
             <div className="mx-1 mb-1 bg-[#16162a] rounded border border-[#2d2d44] p-2 space-y-3">
@@ -345,5 +470,6 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [] 
         </div>
       )}
     </nav>
+    </div>
   )
 }
