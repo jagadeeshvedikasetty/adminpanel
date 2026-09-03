@@ -211,6 +211,7 @@ export async function updateEffectSettings(formData: FormData) {
   const scale = parseFloat(formData.get('scale') as string)
   const speed = parseFloat(formData.get('speed') as string)
   const density = parseFloat(formData.get('density') as string)
+  const duration = parseInt(formData.get('duration') as string, 10)
 
   const supabase = await createClient()
 
@@ -219,6 +220,7 @@ export async function updateEffectSettings(formData: FormData) {
     effect_scale: isNaN(scale) ? 1.0 : scale,
     effect_speed: isNaN(speed) ? 1.0 : speed,
     effect_density: isNaN(density) ? 1.0 : density,
+    effect_duration: isNaN(duration) ? 0 : duration,
   }).eq('id', 'active_theme')
 
   if (error) {

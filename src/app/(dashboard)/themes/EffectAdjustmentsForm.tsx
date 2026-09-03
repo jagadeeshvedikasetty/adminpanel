@@ -30,6 +30,7 @@ export default function EffectAdjustmentsForm({ activeTheme, customEffects, onSa
   const [scale, setScale] = useState<number>(activeTheme?.effect_scale ?? 1.0)
   const [speed, setSpeed] = useState<number>(activeTheme?.effect_speed ?? 1.0)
   const [density, setDensity] = useState<number>(activeTheme?.effect_density ?? 1.0)
+  const [duration, setDuration] = useState<number>(activeTheme?.effect_duration ?? 0)
 
   const particleInfo = getParticleCount(activeTheme?.active_effect, density)
 
@@ -140,6 +141,24 @@ export default function EffectAdjustmentsForm({ activeTheme, customEffects, onSa
               Move the slider to change how many {particleInfo.unit} appear
             </p>
           )}
+        </div>
+
+        <div>
+          <label className="text-[10px] font-medium text-white/80 mb-1 flex justify-between items-center">
+            <span>Duration (Timer)</span>
+            <span className="text-white bg-white/10 px-1.5 py-0.5 rounded font-mono">
+              {duration === 0 ? 'Infinite' : `${duration}s`}
+            </span>
+          </label>
+          <input 
+            type="range" name="duration" min="0" max="60" step="1" 
+            value={duration}
+            onChange={e => setDuration(parseInt(e.target.value, 10))}
+            className="w-full accent-orange-500 h-1.5 bg-white/20 rounded-lg appearance-none cursor-pointer"
+          />
+          <p className="text-[9px] text-white/40 mt-1">
+            0 = infinite. Greater than 0 = effect disappears after X seconds.
+          </p>
         </div>
 
         <button 
