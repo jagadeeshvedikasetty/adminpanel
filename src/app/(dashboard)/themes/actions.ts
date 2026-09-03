@@ -287,6 +287,21 @@ export async function deleteCustomEffect(id: string) {
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
   const adminSupabase = createSupabaseClient(supabaseUrl, supabaseServiceKey)
 
+  // 1. Get the effect to find its URL
+  const { data: effect } = await adminSupabase.from('custom_effects').select('icon_url').eq('id', id).single()
+
+  if (effect?.icon_url) {
+    // Extract file name from public URL (e.g. .../effects/custom-effect-123.svg)
+    const urlParts = effect.icon_url.split('/')
+    const fileName = urlParts[urlParts.length - 1]
+
+    if (fileName) {
+      // 2. Delete from storage bucket
+      await adminSupabase.storage.from('effects').remove([fileName])
+    }
+  }
+
+  // 3. Delete from database
   const { error } = await adminSupabase.from('custom_effects').delete().eq('id', id)
   
   if (error) {

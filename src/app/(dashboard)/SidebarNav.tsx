@@ -250,9 +250,28 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
                   )
                 })}
               </div>
-              <form onSubmit={async (e) => { e.preventDefault(); await uploadCustomEffect(new FormData(e.currentTarget)); }} className="flex gap-1 items-center">
-                <input type="file" name="file" accept=".json,.svg" className="flex-1 text-[9px] text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[9px] file:bg-indigo-600 file:text-white cursor-pointer min-w-0" />
-                <button type="submit" className="text-[9px] bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700 transition-colors shrink-0">Upload</button>
+              <form onSubmit={async (e) => { 
+                e.preventDefault(); 
+                const formData = new FormData(e.currentTarget);
+                const file = formData.get('file') as File;
+                if (!formData.get('name')) {
+                  formData.set('name', file.name.split('.')[0]); // Default name to filename
+                }
+                const res = await createCustomEffect(formData); 
+                if (res?.error) alert(res.error);
+                else e.currentTarget.reset();
+              }} className="flex flex-col gap-1 mt-2 p-2 bg-[#1e1e2e] rounded border border-[#2d2d44]">
+                <span className="text-[10px] text-[#a0a0c0] font-semibold">Upload New Effect</span>
+                <select name="animation_type" className="w-full bg-[#16162a] text-white/90 border border-[#2d2d44] rounded px-1.5 py-1 text-[9px] focus:outline-none focus:border-indigo-500">
+                  <option value="falling">Fall straight down (like Rain)</option>
+                  <option value="floating">Drift & Sway (like Snow)</option>
+                  <option value="flying">Fly upwards (like Kites)</option>
+                  <option value="fullscreen">Full-screen Background</option>
+                </select>
+                <div className="flex gap-1 items-center">
+                  <input type="file" name="file" accept=".json,.svg,.png" required className="flex-1 text-[9px] text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[9px] file:bg-indigo-600 file:text-white cursor-pointer min-w-0" />
+                  <button type="submit" className="text-[9px] bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700 transition-colors shrink-0">Upload</button>
+                </div>
               </form>
 
               {/* Custom Effects Grid */}
@@ -261,10 +280,19 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
                   <span className="text-[10px] text-[#a0a0c0] font-semibold block">My Uploaded Effects</span>
                   <div className="grid grid-cols-3 gap-1">
                     {customEffects.map((ce: any) => {
-                      const isActive = activeTheme?.custom_effect_url === ce.icon_url
+                      const isActive = ce.animation_type === 'fullscreen' 
+                        ? activeTheme?.custom_effect_url === ce.icon_url
+                        : activeTheme?.active_effect === ce.id;
                       return (
                         <div key={ce.id} className="relative group">
-                          <form onSubmit={async (e) => { e.preventDefault(); await applyCustomEffect(ce.icon_url); }}>
+                          <form onSubmit={async (e) => { 
+                            e.preventDefault(); 
+                            if (ce.animation_type === 'fullscreen') {
+                              await applyCustomEffect(ce.icon_url);
+                            } else {
+                              await updateThemeEffect(ce.id);
+                            }
+                          }}>
                             <button type="submit" title={ce.name || 'Custom Effect'} className={`w-full flex flex-col items-center gap-0.5 py-1.5 rounded text-[9px] transition-colors ${isActive ? 'bg-indigo-500/20 text-indigo-400 ring-1 ring-indigo-500/40' : 'bg-[#2d2d44] text-[#a0a0c0] hover:bg-[#3d3d5c]'}`}>
                               {ce.icon_url?.endsWith('.svg') ? (
                                 /* eslint-disable-next-line @next/next/no-img-element */
