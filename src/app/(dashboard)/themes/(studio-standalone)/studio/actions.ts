@@ -85,6 +85,7 @@ export async function saveAllDecorations(decorations: any[]) {
   // 2. Insert all new (stripping out frontend IDs)
   const newDecos = decorations.map(d => ({
     icon_name: d.icon_name,
+    hotspot_id: d.hotspot_id || null,
     x_percent: d.x_percent,
     y_percent: d.y_percent,
     mobile_x_percent: d.mobile_x_percent !== undefined ? d.mobile_x_percent : d.x_percent,

@@ -188,11 +188,14 @@ export default function ThemesPreviewClient({
     }
   }, [decorations, selectedId, openSection])
 
-  const handleAdd = (iconName: string) => {
+  const handleAdd = (detail: any) => {
+    const iconName = typeof detail === 'string' ? detail : detail.iconName;
+    const hotspotId = detail.hotspotId || null;
     const currentMode = viewModeRef.current
     setDecorations(prev => [...prev, { 
       id: Date.now(), 
       icon_name: iconName, 
+      hotspot_id: hotspotId,
       x_percent: 50, 
       y_percent: currentMode === 'mobile' ? 50 : 30, 
       size: 1.0, 

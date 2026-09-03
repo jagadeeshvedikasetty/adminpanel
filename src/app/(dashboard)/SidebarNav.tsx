@@ -90,6 +90,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
   const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop')
   const [hasUnsaved, setHasUnsaved] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
+  const [selectedHotspot, setSelectedHotspot] = useState('')
   const handleSetViewMode = (mode: 'desktop' | 'mobile') => {
     setViewMode(mode)
     window.dispatchEvent(new CustomEvent('SET_VIEW_MODE', { detail: mode }))
@@ -415,14 +416,49 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
           <SectionHeader icon="🎈" label="Add Floating Decorations" open={openSection === 'decorations'} onToggle={() => toggle('decorations')} />
           {openSection === 'decorations' && (
             <div className="mx-1 mb-1 bg-[#16162a] rounded border border-[#2d2d44] p-2 space-y-3">
-              <p className="text-xs text-[#a0a0c0] text-center">Click to drop onto preview canvas</p>
+              <div className="space-y-1">
+                <span className="text-xs text-[#a0a0c0] font-semibold">1. Select Placement (Auto-Sized)</span>
+                <select 
+                  className="w-full text-sm bg-[#1e1e2e] text-white rounded p-1.5 border border-[#3d3d5c] outline-none focus:border-orange-500"
+                  value={selectedHotspot}
+                  onChange={(e) => setSelectedHotspot(e.target.value)}
+                >
+                  <option value="">Anywhere (Default Size)</option>
+                  <optgroup label="Global Corners">
+                    <option value="hotspot-top-left">Top Left Corner</option>
+                    <option value="hotspot-top-right">Top Right Corner</option>
+                    <option value="hotspot-bottom-left">Bottom Left Corner</option>
+                    <option value="hotspot-bottom-right">Bottom Right Corner</option>
+                  </optgroup>
+                  <optgroup label="Header">
+                    <option value="hotspot-header-logo-left">Left of Logo</option>
+                    <option value="hotspot-header-logo-right">Right of Logo</option>
+                  </optgroup>
+                  <optgroup label="Hero Banner">
+                    <option value="hotspot-hero-top-left">Hero Top Left</option>
+                    <option value="hotspot-hero-top-right">Hero Top Right</option>
+                    <option value="hotspot-hero-bottom-left">Hero Bottom Left</option>
+                    <option value="hotspot-hero-bottom-right">Hero Bottom Right</option>
+                  </optgroup>
+                  <optgroup label="Categories">
+                    <option value="hotspot-category-best-sellers">Best Sellers Icon</option>
+                    <option value="hotspot-category-super-savers">Super Savers Icon</option>
+                    <option value="hotspot-category-sweets">Sweets Icon</option>
+                    <option value="hotspot-category-diabetic-friendly">Diabetic Friendly Icon</option>
+                    <option value="hotspot-category-pickles">Pickles Icon</option>
+                    <option value="hotspot-category-snacks">Snacks Icon</option>
+                  </optgroup>
+                </select>
+              </div>
+
+              <span className="text-xs text-[#a0a0c0] font-semibold block">2. Click Icon to Place</span>
               <div className="grid grid-cols-4 gap-2">
                 {Object.keys(ICONS).map((iconName) => (
                   <button
                     key={iconName}
                     onClick={() => {
                       if (typeof window !== 'undefined') {
-                        window.dispatchEvent(new CustomEvent('ADD_DECORATION', { detail: iconName }))
+                        window.dispatchEvent(new CustomEvent('ADD_DECORATION', { detail: { iconName, hotspotId: selectedHotspot } }))
                       }
                     }}
                     className="aspect-square bg-[#2d2d44] hover:bg-[#3d3d5c] rounded flex items-center justify-center p-1.5 transition-colors border border-transparent hover:border-orange-500/50"
@@ -454,7 +490,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
                         <button 
                           onClick={() => {
                             if (typeof window !== 'undefined') {
-                              window.dispatchEvent(new CustomEvent('ADD_DECORATION', { detail: cd.icon_url }))
+                              window.dispatchEvent(new CustomEvent('ADD_DECORATION', { detail: { iconName: cd.icon_url, hotspotId: selectedHotspot } }))
                             }
                           }} 
                           title={cd.name || 'Custom Decoration'} 
