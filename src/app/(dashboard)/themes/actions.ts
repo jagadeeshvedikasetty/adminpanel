@@ -33,6 +33,7 @@ async function uploadToCloudinary(file: File, folder: string): Promise<string | 
 
 export async function uploadThemeBackground(formData: FormData) {
   const file = formData.get('file') as File;
+  const isMobile = formData.get('isMobile') === 'true';
   if (!file || file.size === 0) {
     throw new Error('No file uploaded')
   }
@@ -45,27 +46,41 @@ export async function uploadThemeBackground(formData: FormData) {
     throw new Error('Failed to upload image')
   }
 
-  const { error } = await supabase.from('themes').upsert({
+  const updateData: any = {
     id: 'active_theme',
     name: existing?.name || 'Custom Theme',
-    background_image_url: imageUrl,
     is_active: true
-  }, { onConflict: 'id' })
+  }
+
+  if (isMobile) {
+    updateData.mobile_background_image_url = imageUrl
+  } else {
+    updateData.background_image_url = imageUrl
+  }
+
+  const { error } = await supabase.from('themes').upsert(updateData, { onConflict: 'id' })
 
   if (error) throw new Error(error.message)
   revalidatePath('/themes', 'layout')
 }
 
-export async function removeThemeBackground() {
+export async function removeThemeBackground(isMobile: boolean = false) {
   const supabase = await createClient()
   const { data: existing } = await supabase.from('themes').select('*').eq('id', 'active_theme').maybeSingle()
 
-  const { error } = await supabase.from('themes').upsert({
+  const updateData: any = {
     id: 'active_theme',
     name: existing?.name || 'Custom Theme',
-    background_image_url: null,
     is_active: true
-  }, { onConflict: 'id' })
+  }
+
+  if (isMobile) {
+    updateData.mobile_background_image_url = null
+  } else {
+    updateData.background_image_url = null
+  }
+
+  const { error } = await supabase.from('themes').upsert(updateData, { onConflict: 'id' })
 
   if (error) throw new Error(error.message)
   revalidatePath('/themes', 'layout')

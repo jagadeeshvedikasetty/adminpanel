@@ -23,13 +23,15 @@ import {
 import { ICONS } from './themes/icons'
 
 type Theme = {
-  name?: string
-  primary_color?: string
-  secondary_color?: string
-  active_effect?: string | null
-  background_image_url?: string | null
-  hero_image_url?: string | null
-  mobile_hero_image_url?: string | null
+  id: string;
+  name: string;
+  primary_color: string;
+  secondary_color: string;
+  active_effect: string | null;
+  background_image_url?: string | null;
+  mobile_background_image_url?: string | null;
+  hero_image_url?: string | null;
+  mobile_hero_image_url?: string | null;
   hero_title?: string
   hero_subtitle?: string
   hero_button_text?: string
@@ -96,6 +98,19 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
   const handleAddDecoration = (iconName: string) => {
     window.dispatchEvent(new CustomEvent('ADD_DECORATION', { detail: iconName }))
   }
+
+  useEffect(() => {
+    const handleSetViewModeEvent = (e: any) => {
+      setViewMode(e.detail)
+    }
+    window.addEventListener('SET_VIEW_MODE', handleSetViewModeEvent)
+    
+    // Auto-detect mobile screen on load
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      handleSetViewMode('mobile')
+    }
+    return () => window.removeEventListener('SET_VIEW_MODE', handleSetViewModeEvent)
+  }, [])
 
   useEffect(() => {
     window.dispatchEvent(new CustomEvent('ADMIN_SECTION_CHANGED', { detail: openSection }))
@@ -178,6 +193,12 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
 
       {themeOpen && (
         <div className="space-y-0.5 ml-1">
+
+          {/* Global View Mode Toggle for Admin Editing */}
+          <div className="mx-1 mt-1 mb-2 bg-[#1e1e2e] p-1 rounded flex gap-1 border border-[#2d2d44]">
+            <button onClick={() => handleSetViewMode('desktop')} className={`flex-1 py-1.5 text-xs font-bold rounded ${viewMode === 'desktop' ? 'bg-[#3d3d5c] text-white shadow' : 'text-[#8080a0] hover:text-white transition-colors'}`}>💻 Desktop Edit</button>
+            <button onClick={() => handleSetViewMode('mobile')} className={`flex-1 py-1.5 text-xs font-bold rounded ${viewMode === 'mobile' ? 'bg-[#3d3d5c] text-white shadow' : 'text-[#8080a0] hover:text-white transition-colors'}`}>📱 Mobile Edit</button>
+          </div>
 
           {/* ── 🎨 Colors ── */}
           <SectionHeader icon="🎨" label="Theme Colors" open={openSection === 'colors'} onToggle={() => toggle('colors')} />
@@ -338,26 +359,55 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
           <SectionHeader icon="🖼️" label="Background Image" open={openSection === 'bg'} onToggle={() => toggle('bg')} />
           {openSection === 'bg' && (
             <div className="mx-1 mb-1 bg-[#16162a] rounded border border-[#2d2d44] p-2 space-y-1.5">
-              {activeTheme?.background_image_url ? (
-                <div className="relative rounded overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={activeTheme.background_image_url} alt="bg" className="w-full h-14 object-cover opacity-70" />
-                  <form onSubmit={async (e) => { e.preventDefault(); await removeThemeBackground(); }} className="absolute top-1 right-1">
-                    <button type="submit" className="bg-red-600/80 text-white text-sm px-1.5 py-0.5 rounded hover:bg-red-600">✕</button>
+              {viewMode === 'desktop' ? (
+                <div className="space-y-1.5">
+                  <span className="text-xs text-[#a0a0c0] font-semibold uppercase tracking-wider block">Desktop Background</span>
+                  {activeTheme?.background_image_url ? (
+                    <div className="relative rounded overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={activeTheme.background_image_url} alt="bg" className="w-full h-14 object-cover opacity-70" />
+                      <form onSubmit={async (e) => { e.preventDefault(); await removeThemeBackground(false); }} className="absolute top-1 right-1">
+                        <button type="submit" className="bg-red-600/80 text-white text-sm px-1.5 py-0.5 rounded hover:bg-red-600">✕</button>
+                      </form>
+                    </div>
+                  ) : (
+                    <div className="h-8 rounded border border-dashed border-[#3d3d5c] flex items-center justify-center">
+                      <span className="text-sm text-[#6c6c8a]">No desktop background</span>
+                    </div>
+                  )}
+                  <form onSubmit={async (e) => { e.preventDefault(); const fd = new FormData(e.currentTarget); fd.set('isMobile', 'false'); await uploadThemeBackground(fd); }} className="flex flex-col gap-1 mt-1">
+                    <div className="flex gap-1 items-center">
+                      <input type="file" name="file" accept="image/*" required className="flex-1 text-sm text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-sm file:bg-orange-500 file:text-white cursor-pointer min-w-0" />
+                      <button type="submit" className="text-sm bg-orange-500 text-white px-2 py-1 rounded hover:bg-orange-600 transition-colors shrink-0">Upload</button>
+                    </div>
+                    <p className="text-[10px] text-[#8080a0] px-1">Recommended: 1920x1080 (16:9 widescreen)</p>
                   </form>
                 </div>
               ) : (
-                <div className="h-8 rounded border border-dashed border-[#3d3d5c] flex items-center justify-center">
-                  <span className="text-sm text-[#6c6c8a]">No background set</span>
+                <div className="space-y-1.5">
+                  <span className="text-xs text-[#a0a0c0] font-semibold uppercase tracking-wider block">Mobile Background</span>
+                  {activeTheme?.mobile_background_image_url ? (
+                    <div className="relative rounded overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={activeTheme.mobile_background_image_url} alt="bg" className="w-full h-14 object-cover opacity-70" />
+                      <form onSubmit={async (e) => { e.preventDefault(); await removeThemeBackground(true); }} className="absolute top-1 right-1">
+                        <button type="submit" className="bg-red-600/80 text-white text-sm px-1.5 py-0.5 rounded hover:bg-red-600">✕</button>
+                      </form>
+                    </div>
+                  ) : (
+                    <div className="h-8 rounded border border-dashed border-[#3d3d5c] flex items-center justify-center">
+                      <span className="text-sm text-[#6c6c8a]">No mobile background</span>
+                    </div>
+                  )}
+                  <form onSubmit={async (e) => { e.preventDefault(); const fd = new FormData(e.currentTarget); fd.set('isMobile', 'true'); await uploadThemeBackground(fd); }} className="flex flex-col gap-1 mt-1">
+                    <div className="flex gap-1 items-center">
+                      <input type="file" name="file" accept="image/*" required className="flex-1 text-sm text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-sm file:bg-orange-500 file:text-white cursor-pointer min-w-0" />
+                      <button type="submit" className="text-sm bg-orange-500 text-white px-2 py-1 rounded hover:bg-orange-600 transition-colors shrink-0">Upload</button>
+                    </div>
+                    <p className="text-[10px] text-[#8080a0] px-1">Recommended: 1080x1920 (9:16 vertical)</p>
+                  </form>
                 </div>
               )}
-              <form onSubmit={async (e) => { e.preventDefault(); await uploadThemeBackground(new FormData(e.currentTarget)); }} className="flex flex-col gap-1 mt-1">
-                <div className="flex gap-1 items-center">
-                  <input type="file" name="file" accept="image/*" required className="flex-1 text-sm text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-sm file:bg-orange-500 file:text-white cursor-pointer min-w-0" />
-                  <button type="submit" className="text-sm bg-orange-500 text-white px-2 py-1 rounded hover:bg-orange-600 transition-colors shrink-0">Upload</button>
-                </div>
-                <p className="text-[10px] text-[#8080a0] px-1">Recommended: 1920x1080 (16:9 widescreen)</p>
-              </form>
             </div>
           )}
 
@@ -435,59 +485,57 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
           <SectionHeader icon="🌄" label="Hero Banner" open={openSection === 'hero'} onToggle={() => toggle('hero')} />
           {openSection === 'hero' && (
             <div className="mx-1 mb-1 bg-[#16162a] rounded border border-[#2d2d44] p-2 space-y-3">
-              
-              {/* Desktop Hero */}
-              <div className="space-y-1.5">
-                <span className="text-xs text-[#a0a0c0] font-semibold uppercase tracking-wider block">Desktop Banner</span>
-                {activeTheme?.hero_image_url ? (
-                  <div className="relative rounded overflow-hidden">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={activeTheme.hero_image_url} alt="hero" className="w-full h-14 object-cover opacity-70" />
-                    <form onSubmit={async (e) => { e.preventDefault(); await removeHeroImage(false); }} className="absolute top-1 right-1">
-                      <button type="submit" className="bg-red-600/80 text-white text-sm px-1.5 py-0.5 rounded hover:bg-red-600">✕</button>
-                    </form>
-                  </div>
-                ) : (
-                  <div className="h-8 rounded border border-dashed border-[#3d3d5c] flex items-center justify-center">
-                    <span className="text-sm text-[#6c6c8a]">Using default desktop hero</span>
-                  </div>
-                )}
-                <form onSubmit={async (e) => { e.preventDefault(); await uploadHeroImage(new FormData(e.currentTarget)); }} className="flex flex-col gap-1 mt-1">
-                  <div className="flex gap-1 items-center">
-                    <input type="file" name="file" accept="image/*" required className="flex-1 text-sm text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-sm file:bg-indigo-600 file:text-white cursor-pointer min-w-0" />
-                    <input type="hidden" name="isMobile" value="false" />
-                    <button type="submit" className="text-sm bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700 transition-colors shrink-0">Upload</button>
-                  </div>
-                  <p className="text-[10px] text-[#8080a0] px-1">Recommended: 1920x1080 (16:9) or 21:9 ultrawide</p>
-                </form>
-              </div>
-
-              {/* Mobile Hero */}
-              <div className="space-y-1.5 pt-2 border-t border-[#2d2d44]">
-                <span className="text-xs text-[#a0a0c0] font-semibold uppercase tracking-wider block">Mobile Banner</span>
-                {activeTheme?.mobile_hero_image_url ? (
-                  <div className="relative rounded overflow-hidden">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={activeTheme.mobile_hero_image_url} alt="mobile hero" className="w-full h-20 object-cover opacity-70" />
-                    <form onSubmit={async (e) => { e.preventDefault(); await removeHeroImage(true); }} className="absolute top-1 right-1">
-                      <button type="submit" className="bg-red-600/80 text-white text-sm px-1.5 py-0.5 rounded hover:bg-red-600">✕</button>
-                    </form>
-                  </div>
-                ) : (
-                  <div className="h-8 rounded border border-dashed border-[#3d3d5c] flex items-center justify-center">
-                    <span className="text-sm text-[#6c6c8a]">Falls back to desktop</span>
-                  </div>
-                )}
-                <form onSubmit={async (e) => { e.preventDefault(); await uploadHeroImage(new FormData(e.currentTarget)); }} className="flex flex-col gap-1 mt-1">
-                  <div className="flex gap-1 items-center">
-                    <input type="file" name="file" accept="image/*" required className="flex-1 text-sm text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-sm file:bg-indigo-600 file:text-white cursor-pointer min-w-0" />
-                    <input type="hidden" name="isMobile" value="true" />
-                    <button type="submit" className="text-sm bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700 transition-colors shrink-0">Upload</button>
-                  </div>
-                  <p className="text-[10px] text-[#8080a0] px-1">Recommended: 1080x1350 (4:5) or 9:16 vertical</p>
-                </form>
-              </div>
-
+              {viewMode === 'desktop' ? (
+                <div className="space-y-1.5">
+                  <span className="text-xs text-[#a0a0c0] font-semibold uppercase tracking-wider block">Desktop Banner</span>
+                  {activeTheme?.hero_image_url ? (
+                    <div className="relative rounded overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={activeTheme.hero_image_url} alt="hero" className="w-full h-14 object-cover opacity-70" />
+                      <form onSubmit={async (e) => { e.preventDefault(); await removeHeroImage(false); }} className="absolute top-1 right-1">
+                        <button type="submit" className="bg-red-600/80 text-white text-sm px-1.5 py-0.5 rounded hover:bg-red-600">✕</button>
+                      </form>
+                    </div>
+                  ) : (
+                    <div className="h-8 rounded border border-dashed border-[#3d3d5c] flex items-center justify-center">
+                      <span className="text-sm text-[#6c6c8a]">Using default desktop hero</span>
+                    </div>
+                  )}
+                  <form onSubmit={async (e) => { e.preventDefault(); await uploadHeroImage(new FormData(e.currentTarget)); }} className="flex flex-col gap-1 mt-1">
+                    <div className="flex gap-1 items-center">
+                      <input type="file" name="file" accept="image/*" required className="flex-1 text-sm text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-sm file:bg-indigo-600 file:text-white cursor-pointer min-w-0" />
+                      <input type="hidden" name="isMobile" value="false" />
+                      <button type="submit" className="text-sm bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700 transition-colors shrink-0">Upload</button>
+                    </div>
+                    <p className="text-[10px] text-[#8080a0] px-1">Recommended: 1920x1080 (16:9) or 21:9 ultrawide</p>
+                  </form>
+                </div>
+              ) : (
+                <div className="space-y-1.5">
+                  <span className="text-xs text-[#a0a0c0] font-semibold uppercase tracking-wider block">Mobile Banner</span>
+                  {activeTheme?.mobile_hero_image_url ? (
+                    <div className="relative rounded overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={activeTheme.mobile_hero_image_url} alt="mobile hero" className="w-full h-20 object-cover opacity-70" />
+                      <form onSubmit={async (e) => { e.preventDefault(); await removeHeroImage(true); }} className="absolute top-1 right-1">
+                        <button type="submit" className="bg-red-600/80 text-white text-sm px-1.5 py-0.5 rounded hover:bg-red-600">✕</button>
+                      </form>
+                    </div>
+                  ) : (
+                    <div className="h-8 rounded border border-dashed border-[#3d3d5c] flex items-center justify-center">
+                      <span className="text-sm text-[#6c6c8a]">Falls back to desktop</span>
+                    </div>
+                  )}
+                  <form onSubmit={async (e) => { e.preventDefault(); await uploadHeroImage(new FormData(e.currentTarget)); }} className="flex flex-col gap-1 mt-1">
+                    <div className="flex gap-1 items-center">
+                      <input type="file" name="file" accept="image/*" required className="flex-1 text-sm text-[#6c6c8a] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-sm file:bg-indigo-600 file:text-white cursor-pointer min-w-0" />
+                      <input type="hidden" name="isMobile" value="true" />
+                      <button type="submit" className="text-sm bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700 transition-colors shrink-0">Upload</button>
+                    </div>
+                    <p className="text-[10px] text-[#8080a0] px-1">Recommended: 1080x1350 (4:5) or 9:16 vertical</p>
+                  </form>
+                </div>
+              )}
             </div>
           )}
 

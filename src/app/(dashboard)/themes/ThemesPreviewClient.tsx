@@ -27,8 +27,14 @@ export default function ThemesPreviewClient({
   const [isMinimized, setIsMinimized] = useState(false)
   const [hasUnsaved, setHasUnsaved] = useState(false)
   const [isSaving, startTransition] = useTransition()
-  const iframeRef = useRef<HTMLIFrameElement>(null)
   const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop')
+  const viewModeRef = useRef(viewMode)
+  
+  useEffect(() => {
+    viewModeRef.current = viewMode
+  }, [viewMode])
+
+  const iframeRef = useRef<HTMLIFrameElement>(null)
   const [heroTextPos, setHeroTextPos] = useState({
     xDesktop: activeTheme?.hero_text_x_desktop ?? 50,
     yDesktop: activeTheme?.hero_text_y_desktop ?? 50,
@@ -183,15 +189,16 @@ export default function ThemesPreviewClient({
   }, [decorations, selectedId, openSection])
 
   const handleAdd = (iconName: string) => {
+    const currentMode = viewModeRef.current
     setDecorations(prev => [...prev, { 
       id: Date.now(), 
       icon_name: iconName, 
       x_percent: 50, 
-      y_percent: 30, 
+      y_percent: currentMode === 'mobile' ? 50 : 30, 
       size: 1.0, 
       is_active: true,
-      show_on_desktop: true,
-      show_on_mobile: true
+      show_on_desktop: currentMode === 'desktop',
+      show_on_mobile: currentMode === 'mobile'
     }])
     setHasUnsaved(true)
   }
@@ -245,7 +252,7 @@ export default function ThemesPreviewClient({
         <div 
           className={`relative transition-all duration-500 ease-in-out ${
             viewMode === 'mobile' 
-              ? 'w-[393px] h-[876px] max-h-[95%] border-[12px] border-black rounded-[3rem] shadow-2xl overflow-hidden' 
+              ? 'w-full h-full md:max-w-[393px] md:max-h-[95%] md:border-[12px] md:border-black md:rounded-[3rem] shadow-2xl overflow-hidden' 
               : 'w-full h-full'
           }`}
         >
