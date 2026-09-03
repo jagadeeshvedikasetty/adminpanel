@@ -146,18 +146,20 @@ export default function EffectAdjustmentsForm({ activeTheme, customEffects, onSa
         <div>
           <label className="text-[10px] font-medium text-white/80 mb-1 flex justify-between items-center">
             <span>Duration (Timer)</span>
-            <span className="text-white bg-white/10 px-1.5 py-0.5 rounded font-mono">
-              {duration === 0 ? 'Infinite' : `${duration}s`}
-            </span>
           </label>
-          <input 
-            type="range" name="duration" min="0" max="60" step="1" 
+          <select 
+            name="duration" 
             value={duration}
             onChange={e => setDuration(parseInt(e.target.value, 10))}
-            className="w-full accent-orange-500 h-1.5 bg-white/20 rounded-lg appearance-none cursor-pointer"
-          />
+            className="w-full bg-[#1e1e2e] text-white/90 border border-[#2d2d44] rounded px-2 py-1.5 text-[10px] focus:outline-none focus:border-orange-500"
+          >
+            <option value="0">Infinite</option>
+            <option value="5">5 seconds</option>
+            <option value="10">10 seconds</option>
+            <option value="30">30 seconds</option>
+          </select>
           <p className="text-[9px] text-white/40 mt-1">
-            0 = infinite. Greater than 0 = effect disappears after X seconds.
+            If a time is selected, the effect will smoothly fade out after it finishes.
           </p>
         </div>
 
