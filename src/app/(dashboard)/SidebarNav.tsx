@@ -435,11 +435,9 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
                   onChange={(e) => setSelectedHotspot(e.target.value)}
                 >
                   <option value="">Anywhere (Default Size)</option>
-                  <optgroup label="Global Corners">
-                    <option value="hotspot-top-left">Top Left Corner</option>
-                    <option value="hotspot-top-right">Top Right Corner</option>
-                    <option value="hotspot-bottom-left">Bottom Left Corner</option>
-                    <option value="hotspot-bottom-right">Bottom Right Corner</option>
+                  <optgroup label="Page Corners">
+                    <option value="hotspot-top-left">Top Left Screen</option>
+                    <option value="hotspot-top-right">Top Right Screen</option>
                   </optgroup>
                   <optgroup label="Header">
                     <option value="hotspot-header-logo-left">Left of Logo</option>
@@ -450,14 +448,6 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
                     <option value="hotspot-hero-top-right">Hero Top Right</option>
                     <option value="hotspot-hero-bottom-left">Hero Bottom Left</option>
                     <option value="hotspot-hero-bottom-right">Hero Bottom Right</option>
-                  </optgroup>
-                  <optgroup label="Categories">
-                    <option value="hotspot-category-best-sellers">Best Sellers Icon</option>
-                    <option value="hotspot-category-super-savers">Super Savers Icon</option>
-                    <option value="hotspot-category-sweets">Sweets Icon</option>
-                    <option value="hotspot-category-diabetic-friendly">Diabetic Friendly Icon</option>
-                    <option value="hotspot-category-pickles">Pickles Icon</option>
-                    <option value="hotspot-category-snacks">Snacks Icon</option>
                   </optgroup>
                 </select>
               </div>
