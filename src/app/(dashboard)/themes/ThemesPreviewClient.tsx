@@ -134,6 +134,13 @@ export default function ThemesPreviewClient({
             openSection
           }, '*')
         }
+      } else if (e.data?.type === 'DELETE_DECORATION') {
+        const idToDelete = e.data.id;
+        setDecorations(prev => {
+          const next = prev.filter(d => d.id !== idToDelete);
+          setHasUnsaved(true);
+          return next;
+        });
       }
     }
     window.addEventListener('message', handleMessage)
