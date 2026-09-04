@@ -100,7 +100,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
   }
 
   const handleAddDecoration = (iconName: string) => {
-    window.dispatchEvent(new CustomEvent('ADD_DECORATION', { detail: iconName }))
+    window.dispatchEvent(new CustomEvent('ADD_DECORATION', { detail: { iconName, hotspotId: selectedHotspot } }))
   }
 
   useEffect(() => {
