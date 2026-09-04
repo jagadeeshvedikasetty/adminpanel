@@ -81,6 +81,9 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
   const isTheme = pathname.startsWith('/themes')
   const [themeOpen, setThemeOpen] = useState(isTheme)
   const [openSection, setOpenSection] = useState<string | null>(null)
+  
+  // Track active decorations purely via preview iframe state syncing
+  const [activeDecorations, setActiveDecorations] = useState<any[]>([])
   const [primaryColor, setPrimaryColor] = useState(activeTheme?.primary_color || '#FF9933')
   const [secondaryColor, setSecondaryColor] = useState(activeTheme?.secondary_color || '#138808')
   const [heroDesktopHeight, setHeroDesktopHeight] = useState(activeTheme?.hero_desktop_height ?? 100)
@@ -104,13 +107,23 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
     const handleSetViewModeEvent = (e: any) => {
       setViewMode(e.detail)
     }
+    const handleDecorationsSync = (e: MessageEvent) => {
+      if (e.data?.type === 'STUDIO_SYNC') {
+        setActiveDecorations(e.data.decorations || [])
+      }
+    }
+    
     window.addEventListener('SET_VIEW_MODE', handleSetViewModeEvent)
+    window.addEventListener('message', handleDecorationsSync)
     
     // Auto-detect mobile screen on load
     if (typeof window !== 'undefined' && window.innerWidth < 768) {
       handleSetViewMode('mobile')
     }
-    return () => window.removeEventListener('SET_VIEW_MODE', handleSetViewModeEvent)
+    return () => {
+      window.removeEventListener('SET_VIEW_MODE', handleSetViewModeEvent)
+      window.removeEventListener('message', handleDecorationsSync)
+    }
   }, [])
 
   useEffect(() => {
@@ -510,6 +523,35 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
                             ✕
                           </button>
                         </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Active Decorations List */}
+              {activeDecorations.length > 0 && (
+                <div className="pt-2 border-t border-[#2d2d44]">
+                  <span className="text-xs text-[#a0a0c0] font-semibold block mb-1">Active Decorations</span>
+                  <div className="space-y-1">
+                    {activeDecorations.map((dec, i) => (
+                      <div key={dec.id || i} className="flex items-center justify-between bg-[#1e1e2e] p-1.5 rounded border border-[#3d3d5c]">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs">{dec.icon_name.startsWith('http') || dec.icon_name.startsWith('data:') ? '🖼️' : dec.icon_name.startsWith('lottie:') ? '🎬' : '🎯'}</span>
+                          <span className="text-xs text-white truncate max-w-[120px]">{dec.hotspot_id ? dec.hotspot_id.replace('hotspot-', '') : 'Anywhere'}</span>
+                        </div>
+                        <button 
+                          onClick={() => {
+                            // Send delete message to preview iframe
+                            const updated = activeDecorations.filter(d => d.id !== dec.id);
+                            setActiveDecorations(updated);
+                            window.dispatchEvent(new CustomEvent('DELETE_DECORATION', { detail: dec.id }));
+                          }}
+                          className="text-red-400 hover:bg-red-900/30 p-1 rounded transition-colors text-xs"
+                          title="Remove decoration"
+                        >
+                          ✕
+                        </button>
                       </div>
                     ))}
                   </div>

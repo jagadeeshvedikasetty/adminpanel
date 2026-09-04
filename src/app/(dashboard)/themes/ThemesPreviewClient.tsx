@@ -162,12 +162,23 @@ export default function ThemesPreviewClient({
       handleSave()
     }
     window.addEventListener('REQUEST_SAVE_DECORATIONS', handleRequestSave)
+
+    const handleDeleteDecoration = (e: any) => {
+      const idToDelete = e.detail;
+      setDecorations(prev => {
+        const next = prev.filter(d => d.id !== idToDelete);
+        setHasUnsaved(true);
+        return next;
+      });
+    }
+    window.addEventListener('DELETE_DECORATION', handleDeleteDecoration)
     
     return () => {
       window.removeEventListener('message', handleMessage)
       window.removeEventListener('ADMIN_SECTION_CHANGED', handleSectionChange)
       window.removeEventListener('SET_VIEW_MODE', handleSetViewMode)
       window.removeEventListener('ADD_DECORATION', handleAddDecorationEvent)
+      window.removeEventListener('DELETE_DECORATION', handleDeleteDecoration)
       window.removeEventListener('REQUEST_SAVE_DECORATIONS', handleRequestSave)
     }
   }, [decorations, selectedId, openSection, hasUnsaved])
