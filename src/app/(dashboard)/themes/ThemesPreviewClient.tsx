@@ -197,6 +197,9 @@ export default function ThemesPreviewClient({
         openSection
       }, '*')
     }
+    
+    // Also dispatch to local window so SidebarNav can read the active decorations
+    window.dispatchEvent(new CustomEvent('SYNC_DECORATIONS', { detail: decorations }))
   }, [decorations, selectedId, openSection])
 
   const handleAdd = (detail: any) => {

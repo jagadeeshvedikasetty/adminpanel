@@ -107,14 +107,12 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
     const handleSetViewModeEvent = (e: any) => {
       setViewMode(e.detail)
     }
-    const handleDecorationsSync = (e: MessageEvent) => {
-      if (e.data?.type === 'STUDIO_SYNC') {
-        setActiveDecorations(e.data.decorations || [])
-      }
+    const handleDecorationsSync = (e: any) => {
+      setActiveDecorations(e.detail || [])
     }
     
     window.addEventListener('SET_VIEW_MODE', handleSetViewModeEvent)
-    window.addEventListener('message', handleDecorationsSync)
+    window.addEventListener('SYNC_DECORATIONS', handleDecorationsSync)
     
     // Auto-detect mobile screen on load
     if (typeof window !== 'undefined' && window.innerWidth < 768) {
@@ -122,7 +120,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
     }
     return () => {
       window.removeEventListener('SET_VIEW_MODE', handleSetViewModeEvent)
-      window.removeEventListener('message', handleDecorationsSync)
+      window.removeEventListener('SYNC_DECORATIONS', handleDecorationsSync)
     }
   }, [])
 
