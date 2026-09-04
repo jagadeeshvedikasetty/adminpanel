@@ -93,7 +93,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
   const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop')
   const [hasUnsaved, setHasUnsaved] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
-  const [selectedHotspot, setSelectedHotspot] = useState('')
+  const [selectedHotspot, setSelectedHotspot] = useState('hotspot-top-left')
   const handleSetViewMode = (mode: 'desktop' | 'mobile') => {
     setViewMode(mode)
     window.dispatchEvent(new CustomEvent('SET_VIEW_MODE', { detail: mode }))
@@ -434,7 +434,6 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
                   value={selectedHotspot}
                   onChange={(e) => setSelectedHotspot(e.target.value)}
                 >
-                  <option value="">Anywhere (Default Size)</option>
                   <optgroup label="Page Corners">
                     <option value="hotspot-top-left">Top Left Screen</option>
                     <option value="hotspot-top-right">Top Right Screen</option>
