@@ -3,12 +3,15 @@
 import { useState, useRef } from 'react'
 import { updateProduct, createProduct } from './actions'
 
-export default function EditProductForm({ product }: { product: any }) {
+export default function EditProductForm({ product, categories = [] }: { product: any, categories?: string[] }) {
   const [variants, setVariants] = useState<any[]>(product.variants || [])
   const [error, setError] = useState('')
   const [imagePreview, setImagePreview] = useState(product.image_url)
   const [videoPreview, setVideoPreview] = useState(product.video_url)
   const [videoScale, setVideoScale] = useState(product.video_scale || 1.0)
+  const [isNewCategory, setIsNewCategory] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState(product.category || '')
+  
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
 
@@ -74,8 +77,38 @@ export default function EditProductForm({ product }: { product: any }) {
           <input type="text" name="name" defaultValue={product.name} required className="w-full border-gray-300 rounded-md shadow-sm border px-3 py-2 text-gray-900" />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-          <input type="text" name="category" defaultValue={product.category} className="w-full border-gray-300 rounded-md shadow-sm border px-3 py-2 text-gray-900" />
+          <div className="flex justify-between items-center mb-1">
+            <label className="block text-sm font-medium text-gray-700">Category</label>
+            <button 
+              type="button" 
+              onClick={() => setIsNewCategory(!isNewCategory)}
+              className="text-xs text-indigo-600 hover:text-indigo-900 font-medium"
+            >
+              {isNewCategory ? 'Select Existing' : '+ Add New'}
+            </button>
+          </div>
+          {isNewCategory ? (
+            <input 
+              type="text" 
+              name="category" 
+              placeholder="Enter new category name..."
+              className="w-full border-gray-300 rounded-md shadow-sm border px-3 py-2 text-gray-900" 
+              required
+            />
+          ) : (
+            <select 
+              name="category" 
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="w-full border-gray-300 rounded-md shadow-sm border px-3 py-2 text-gray-900 bg-white"
+              required
+            >
+              <option value="" disabled>Select a category</option>
+              {categories.map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+          )}
         </div>
       </div>
 

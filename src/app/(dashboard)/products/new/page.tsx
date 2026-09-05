@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import EditProductForm from '../[id]/EditProductForm'
+import { createClient } from '@/utils/supabase/server'
 
-export default function NewProductPage() {
+export default async function NewProductPage() {
   const emptyProduct = {
     id: 'new',
     name: '',
@@ -13,6 +14,10 @@ export default function NewProductPage() {
     ingredients: ''
   }
 
+  const supabase = await createClient()
+  const { data: allProducts } = await supabase.from('products').select('category')
+  const categories = Array.from(new Set((allProducts || []).map(p => p.category).filter(Boolean))).sort()
+
   return (
     <div className="max-w-2xl mx-auto p-6 md:p-8 pt-16">
       <div className="flex items-center mb-6">
@@ -22,7 +27,7 @@ export default function NewProductPage() {
         <h1 className="text-2xl font-bold text-gray-800">Create New Product</h1>
       </div>
       
-      <EditProductForm product={emptyProduct} />
+      <EditProductForm product={emptyProduct} categories={categories} />
     </div>
   )
 }

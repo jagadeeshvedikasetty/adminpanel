@@ -192,6 +192,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
       <nav className="p-2 space-y-0.5">
       {navLink('/', '🏠', 'Dashboard')}
       {navLink('/products', '📦', 'Products')}
+      {navLink('/categories', '🏷️', 'Categories')}
       {navLink('/orders', '📋', 'Orders')}
       {navLink('/customers', '👥', 'Customers')}
 

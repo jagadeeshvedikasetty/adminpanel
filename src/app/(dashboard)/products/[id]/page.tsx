@@ -17,6 +17,10 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
     notFound()
   }
 
+  // Fetch unique categories
+  const { data: allProducts } = await supabase.from('products').select('category')
+  const categories = Array.from(new Set((allProducts || []).map(p => p.category).filter(Boolean))).sort()
+
   return (
     <div className="max-w-2xl mx-auto">
       <div className="flex items-center mb-6">
@@ -26,7 +30,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
         <h1 className="text-2xl font-bold text-gray-800">Edit Product: {product.name}</h1>
       </div>
       
-      <EditProductForm product={product} />
+      <EditProductForm product={product} categories={categories} />
     </div>
   )
 }
