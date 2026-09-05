@@ -48,6 +48,8 @@ type Theme = {
   hero_desktop_position?: string
   hero_mobile_position?: string
   custom_effect_url?: string | null
+  promo_text?: string | null
+  promo_link?: string | null
 }
 type Festival = {
   id: string; name: string; icon: string; description?: string
