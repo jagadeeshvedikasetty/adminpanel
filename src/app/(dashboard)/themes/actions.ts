@@ -108,24 +108,19 @@ export async function updateThemeColors(themeName: string, primaryColor: string,
   revalidatePath('/themes', 'layout')
 }
 
-// Apply festival theme: sets colors AND the suggested effect together in one click
 export async function applyFestivalTheme(
   themeName: string,
   primaryColor: string,
-  secondaryColor: string,
-  suggestedEffect: string | null
+  secondaryColor: string
 ) {
   const supabase = await createClient()
 
-  const { error } = await supabase.from('themes').upsert({
-    id: 'active_theme',
+  const { error } = await supabase.from('themes').update({
     name: themeName,
     primary_color: primaryColor,
     secondary_color: secondaryColor,
-    active_effect: suggestedEffect,
-    custom_effect_url: null,
     is_active: true
-  }, { onConflict: 'id' })
+  }).eq('id', 'active_theme')
 
   if (error) {
     throw new Error(error.message)

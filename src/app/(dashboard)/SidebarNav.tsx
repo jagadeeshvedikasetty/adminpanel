@@ -236,7 +236,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
                         </div>
                         <span className="text-xs text-[#c0c0d8] truncate">{f.name}</span>
                       </div>
-                      <form onSubmit={async (e) => { e.preventDefault(); await applyFestivalTheme(f.name, f.themeColors.primary, f.themeColors.secondary, f.suggestedEffect || null); }}>
+                      <form onSubmit={async (e) => { e.preventDefault(); await applyFestivalTheme(f.name, f.themeColors.primary, f.themeColors.secondary); }}>
                         <button type="submit" disabled={isActive} className={`text-sm font-bold px-1.5 py-0.5 rounded shrink-0 transition-colors ${isActive ? 'bg-orange-500/20 text-orange-400 cursor-default' : 'bg-[#2d2d44] text-[#a0a0c0] hover:bg-orange-500 hover:text-white'}`}>
                           {isActive ? '✓' : 'Apply'}
                         </button>
