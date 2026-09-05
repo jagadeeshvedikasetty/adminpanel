@@ -97,8 +97,8 @@ export async function updateThemeColors(themeName: string, primaryColor: string,
     name: themeName,
     primary_color: primaryColor,
     secondary_color: secondaryColor,
-    active_effect: existing?.active_effect || null,
-    custom_effect_url: existing?.custom_effect_url || null,
+    active_effect: null,
+    custom_effect_url: null,
     is_active: true
   }, { onConflict: 'id' })
 
@@ -119,6 +119,8 @@ export async function applyFestivalTheme(
     name: themeName,
     primary_color: primaryColor,
     secondary_color: secondaryColor,
+    active_effect: null,
+    custom_effect_url: null,
     is_active: true
   }).eq('id', 'active_theme')
 
