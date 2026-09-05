@@ -34,6 +34,7 @@ export async function updateProduct(productId: number, formData: FormData) {
 
   const name = formData.get('name') as string
   const category = formData.get('category') as string
+  const ingredients = formData.get('ingredients') as string
   
   // Reconstruct variants array from dynamic form fields
   const variants: any[] = []
@@ -71,7 +72,7 @@ export async function updateProduct(productId: number, formData: FormData) {
   const videoScale = formData.get('videoScale') ? parseFloat(formData.get('videoScale') as string) : 1.0
 
   // Prepare update payload
-  const updateData: any = { name, category, variants, video_scale: videoScale }
+  const updateData: any = { name, category, ingredients, variants, video_scale: videoScale }
   if (imageUrl) updateData.image_url = imageUrl
   if (videoUrl) updateData.video_url = videoUrl
 
@@ -93,6 +94,7 @@ export async function createProduct(formData: FormData) {
 
   const name = formData.get('name') as string
   const category = formData.get('category') as string
+  const ingredients = formData.get('ingredients') as string
   
   const variants: any[] = []
   let index = 0
@@ -127,7 +129,7 @@ export async function createProduct(formData: FormData) {
 
   const videoScale = formData.get('videoScale') ? parseFloat(formData.get('videoScale') as string) : 1.0
 
-  const insertData: any = { name, category, variants, video_scale: videoScale }
+  const insertData: any = { name, category, ingredients, variants, video_scale: videoScale }
   if (imageUrl) insertData.image_url = imageUrl
   if (videoUrl) insertData.video_url = videoUrl
 

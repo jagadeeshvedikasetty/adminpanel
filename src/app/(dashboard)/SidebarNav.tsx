@@ -193,6 +193,7 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
       {navLink('/', '🏠', 'Dashboard')}
       {navLink('/products', '📦', 'Products')}
       {navLink('/orders', '📋', 'Orders')}
+      {navLink('/customers', '👥', 'Customers')}
 
       <Divider />
 

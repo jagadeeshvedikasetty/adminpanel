@@ -79,6 +79,11 @@ export default function EditProductForm({ product }: { product: any }) {
         </div>
       </div>
 
+      <div className="mb-6">
+        <label className="block text-sm font-medium text-gray-700 mb-1">Ingredients</label>
+        <textarea name="ingredients" defaultValue={product.ingredients || ''} rows={3} className="w-full border-gray-300 rounded-md shadow-sm border px-3 py-2 text-gray-900" placeholder="E.g. Raw Mango, Mustard Oil, Fenugreek..."></textarea>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 bg-gray-50 p-4 rounded border border-gray-200">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Product Image</label>

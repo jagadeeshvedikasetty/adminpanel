@@ -9,7 +9,8 @@ export default function NewProductPage() {
     variants: [{ weight: '', price: 0 }],
     image_url: '',
     video_url: '',
-    video_scale: 1.0
+    video_scale: 1.0,
+    ingredients: ''
   }
 
   return (
