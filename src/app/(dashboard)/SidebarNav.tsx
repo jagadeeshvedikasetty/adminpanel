@@ -18,7 +18,8 @@ import {
   deleteCustomEffect,
   createCustomEffect,
   uploadCustomFloatingDecoration,
-  deleteCustomFloatingDecoration
+  deleteCustomFloatingDecoration,
+  updatePromoBar
 } from './themes/actions'
 import { ICONS } from './themes/icons'
 
@@ -94,6 +95,9 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
   const [hasUnsaved, setHasUnsaved] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [selectedHotspot, setSelectedHotspot] = useState('hotspot-top-left')
+  
+  const [promoText, setPromoText] = useState(activeTheme?.promo_text || '')
+  const [promoLink, setPromoLink] = useState(activeTheme?.promo_link || '')
   const handleSetViewMode = (mode: 'desktop' | 'mobile') => {
     setViewMode(mode)
     window.dispatchEvent(new CustomEvent('SET_VIEW_MODE', { detail: mode }))
@@ -145,6 +149,8 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
       setHeroMobileHeight(activeTheme.hero_mobile_height ?? 60)
       setHeroDesktopPosition(activeTheme.hero_desktop_position ?? 'center')
       setHeroMobilePosition(activeTheme.hero_mobile_position ?? 'center')
+      setPromoText(activeTheme.promo_text || '')
+      setPromoLink(activeTheme.promo_link || '')
     }
   }, [activeTheme])
 
@@ -264,6 +270,26 @@ export default function SidebarNav({ activeTheme, festivals, customEffects = [],
                   </button>
                 </form>
               </div>
+            </div>
+          )}
+
+          {/* ── 🛒 Promo Bar ── */}
+          <SectionHeader icon="🛒" label="Promo Bar" open={openSection === 'promo'} onToggle={() => toggle('promo')} />
+          {openSection === 'promo' && (
+            <div className="mx-1 mb-1 bg-[#16162a] rounded border border-[#2d2d44] p-2 space-y-2">
+              <form onSubmit={async (e) => { e.preventDefault(); await updatePromoBar(promoText, promoLink); }}>
+                <div className="space-y-1">
+                  <label className="text-xs text-[#6c6c8a]">Promo Text (Leave empty to hide)</label>
+                  <input type="text" value={promoText} onChange={e => setPromoText(e.target.value)} placeholder="e.g. 🎉 New Sale!" className="w-full bg-[#2d2d44] border-none text-white px-2 py-1 text-sm rounded focus:outline-none focus:ring-1 focus:ring-orange-500" />
+                </div>
+                <div className="space-y-1 mt-2">
+                  <label className="text-xs text-[#6c6c8a]">Link URL</label>
+                  <input type="text" value={promoLink} onChange={e => setPromoLink(e.target.value)} placeholder="e.g. /shop" className="w-full bg-[#2d2d44] border-none text-white px-2 py-1 text-sm rounded focus:outline-none focus:ring-1 focus:ring-orange-500" />
+                </div>
+                <button type="submit" className="mt-2 w-full text-sm font-bold bg-orange-500 hover:bg-orange-600 text-white rounded py-1 transition-colors">
+                  Save Promo Bar
+                </button>
+              </form>
             </div>
           )}
 

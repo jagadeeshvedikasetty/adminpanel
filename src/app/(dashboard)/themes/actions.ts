@@ -130,6 +130,21 @@ export async function applyFestivalTheme(
   revalidatePath('/themes', 'layout')
 }
 
+export async function updatePromoBar(promoText: string, promoLink: string) {
+  const supabase = await createClient()
+
+  const { error } = await supabase.from('themes').upsert({
+    id: 'active_theme',
+    promo_text: promoText,
+    promo_link: promoLink,
+    is_active: true
+  }, { onConflict: 'id' })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+  revalidatePath('/', 'layout')
+}
 
 
 export async function updateThemeEffect(effect: string | null) {
