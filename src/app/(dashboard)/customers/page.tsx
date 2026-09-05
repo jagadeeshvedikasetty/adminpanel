@@ -35,35 +35,40 @@ export default function CustomersPage() {
   }, []);
 
   if (loading) {
-    return <div className="p-6 text-[#a0a0c0]">Loading customers...</div>;
+    return <div className="p-6 text-gray-500">Loading customers...</div>;
   }
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold text-white mb-6">Customers</h1>
+    <div className="max-w-7xl mx-auto p-6 md:p-8 pt-16">
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">Customers</h1>
       
-      <div className="bg-[#1e1e2e] rounded border border-[#2d2d44] overflow-hidden">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-[#2d2d44] bg-[#16162a]">
-              <th className="p-3 text-sm font-semibold text-[#a0a0c0]">Name</th>
-              <th className="p-3 text-sm font-semibold text-[#a0a0c0]">Email</th>
-              <th className="p-3 text-sm font-semibold text-[#a0a0c0]">Phone</th>
-              <th className="p-3 text-sm font-semibold text-[#a0a0c0]">Joined</th>
+            <tr className="bg-gray-50 border-b border-gray-200 text-sm text-gray-500">
+              <th className="p-4 font-medium">Name</th>
+              <th className="p-4 font-medium">Email</th>
+              <th className="p-4 font-medium">Phone</th>
+              <th className="p-4 font-medium">Joined</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#2d2d44]">
+          <tbody className="divide-y divide-gray-200">
             {customers.length === 0 ? (
               <tr>
-                <td colSpan={4} className="p-4 text-center text-[#6c6c8a]">No customers found.</td>
+                <td colSpan={4} className="p-12 text-center text-gray-500">
+                  <svg className="mx-auto h-12 w-12 text-gray-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                  No customers found yet.
+                </td>
               </tr>
             ) : (
               customers.map((c) => (
-                <tr key={c.id} className="hover:bg-[#252538] transition-colors">
-                  <td className="p-3 text-sm text-white font-medium">{c.name}</td>
-                  <td className="p-3 text-sm text-[#a0a0c0]">{c.email || '-'}</td>
-                  <td className="p-3 text-sm text-[#a0a0c0]">{c.phone || '-'}</td>
-                  <td className="p-3 text-sm text-[#a0a0c0]">{new Date(c.created_at).toLocaleDateString()}</td>
+                <tr key={c.id} className="hover:bg-gray-50 transition-colors">
+                  <td className="p-4 text-sm font-medium text-gray-900">{c.name}</td>
+                  <td className="p-4 text-sm text-gray-600">{c.email || '-'}</td>
+                  <td className="p-4 text-sm text-gray-600">{c.phone || '-'}</td>
+                  <td className="p-4 text-sm text-gray-500">{new Date(c.created_at).toLocaleDateString()}</td>
                 </tr>
               ))
             )}
